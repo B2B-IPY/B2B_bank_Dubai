@@ -287,8 +287,8 @@ export interface Cashin {
     amount:      number;
     description: string;
     externalId:  string;
-    receiverId:  ErID;
-    senderId:    ErID;
+    receiverId:  string;
+    senderId:    string;
     tags:        string[];
     fee:         number;
     source:      string;
@@ -296,10 +296,7 @@ export interface Cashin {
     created:     string;
 }
 
-export enum ErID {
-    Starkbank = "starkbank",
-    The4811593311322112 = "4811593311322112",
-}
+
 
 export interface Cashout {
     id:                 string;
