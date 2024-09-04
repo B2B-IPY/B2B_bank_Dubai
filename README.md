@@ -69,6 +69,19 @@ Headers:
 }
 ```
 <br>
+
+Response:
+```
+export interface Balance {
+    id:       string;
+    amount:   number;
+    currency: string;
+    updated:  string;
+}
+```
+
+
+<br>
 <br>
 <br>
 
@@ -82,6 +95,76 @@ Headers:
 	"x-access-token":"token recebido pela rota /login",
 }
 ```
+<br>
+
+Response:
+```
+export interface Dashboard {
+    tpv:                      Cashin;
+    cashin:                   Cashin;
+    cashout:                  Cashin;
+    quantidade_de_transacoes: Cashin;
+    ticket_medio:             TicketMedio;
+}
+
+export interface Cashin {
+    mes_atual:            number;
+    mes_anterior:         number;
+    relatorio_ultimo_ano: RelatorioUltimoAno[];
+}
+
+export interface RelatorioUltimoAno {
+    name: string;
+    uv:   number;
+    pv:   number;
+    amt:  number;
+}
+
+export interface TicketMedio {
+    mes_atual:    number;
+    mes_anterior: number;
+}
+```
+
+
+<br>
+<br>
+<br>
+
+`GET` **/transferir/pix/verificar/:chavePix**
+
+Exemplo: /transferir/pix/verificar/+5577991922123
+
+
+Headers:
+```
+{
+	"x-access-token":"token recebido pela rota /login",
+}
+```
+
+<br>
+
+
+Response:
+```
+export interface ChavePix {
+    id:             string;
+    type:           string;
+    accountCreated: null;
+    accountType:    string;
+    name:           string;
+    taxId:          string;
+    ownerType:      null;
+    bankName:       string;
+    ispb:           string;
+    branchCode:     string;
+    accountNumber:  string;
+    status:         string;
+}
+```
+
+
 <br>
 <br>
 <br>
@@ -112,6 +195,37 @@ Body:
   "accountNumber": "*+GRQf/fWMTmcBOcqDpTrk1TkuKvBbxQ4oDJAv7GA4cUyzU6U2c2CXT2qFQe9r4kYhQoKjkKFbcCWuo7bfMh3zm68xuNMRuwxbxCBfB1zW8w/ZiZIdBz7ZQXwXJONl9S3"
 }
 ```
+<br>
+
+Response:
+```
+export interface Pix {
+    id:                 string;
+    amount:             number;
+    name:               string;
+    taxId:              string;
+    bankCode:           string;
+    branchCode:         string;
+    accountNumber:      string;
+    accountType:        string;
+    externalId:         string;
+    scheduled:          string;
+    description:        string;
+    displayDescription: string;
+    tags:               string[];
+    rules:              any[];
+    fee:                number;
+    status:             string;
+    transactionIds:     any[];
+    metadata:           Metadata;
+    created:            string;
+    updated:            string;
+}
+
+export interface Metadata {
+}
+```
+
 
 <br>
 <br>
@@ -137,6 +251,13 @@ Body:
   "taxId": "33.435.177/0001-22"  
 }
 ```
+<br>
+
+Response base64:
+```
+string
+```
+
 
 <br>
 <br>
@@ -152,6 +273,62 @@ Headers:
 	"x-access-token":"token recebido pela rota /login",
 }
 ```
+<br>
+
+Response:
+```
+export interface Extrato {
+    cashout: Cashout[];
+    cashin:  Cashin[];
+}
+
+export interface Cashin {
+    id:          string;
+    amount:      number;
+    description: string;
+    externalId:  string;
+    receiverId:  ErID;
+    senderId:    ErID;
+    tags:        string[];
+    fee:         number;
+    source:      string;
+    balance:     number;
+    created:     string;
+}
+
+export enum ErID {
+    Starkbank = "starkbank",
+    The4811593311322112 = "4811593311322112",
+}
+
+export interface Cashout {
+    id:                 string;
+    amount:             number;
+    name:               string;
+    taxId:              string;
+    bankCode:           string;
+    branchCode:         string;
+    accountNumber:      string;
+    accountType:        string;
+    externalId:         string;
+    scheduled:          string;
+    description:        string;
+    displayDescription: string;
+    tags:               string[];
+    rules:              any[];
+    fee:                number;
+    status:             string;
+    transactionIds:     string[];
+    metadata:           Metadata;
+    created:            string;
+    updated:            string;
+}
+
+export interface Metadata {
+    authentication?: string;
+}
+```
+
 
 <br>
 <br>
@@ -187,6 +364,22 @@ Body:
   
 }
 ```
+<br>
+
+Response:
+```
+export interface PixQRcode {
+    id:         string;
+    amount:     number;
+    expiration: number;
+    tags:       any[];
+    uuid:       string;
+    pictureUrl: string;
+    updated:    string;
+    created:    string;
+}
+```
+
 
 <br>
 <br>
@@ -218,6 +411,42 @@ Body:
   "zipCode": "01500-000"
 }
 ```
+<br>
+
+Response:
+```
+export interface Boleto {
+    id:             string;
+    amount:         number;
+    name:           string;
+    taxId:          string;
+    streetLine1:    string;
+    streetLine2:    string;
+    district:       string;
+    city:           string;
+    stateCode:      string;
+    zipCode:        string;
+    due:            string;
+    fine:           number;
+    interest:       number;
+    overdueLimit:   number;
+    receiverName:   string;
+    receiverTaxId:  string;
+    tags:           any[];
+    descriptions:   any[];
+    discounts:      any[];
+    fee:            number;
+    line:           string;
+    barCode:        string;
+    status:         string;
+    transactionIds: any[];
+    workspaceId:    string;
+    created:        string;
+    ourNumber:      string;
+    splits:         any[];
+}
+```
+
 
 <br>
 <br>
@@ -234,6 +463,13 @@ Headers:
 	"x-access-token":"token recebido pela rota /login",
 }
 ```
+<br>
+
+Response base64:
+```
+string
+```
+
 
 <br>
 <br>
