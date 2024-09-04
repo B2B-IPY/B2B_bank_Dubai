@@ -19,6 +19,40 @@ body:
 	"password":"senha_do_gustavo"
 }
 ```
+<br>
+
+Response:
+```
+export interface Login {
+    isLogged:       boolean;
+    token:          string;
+    dadosBancarios: DadosBancario[];
+    balance:        Balance;
+    role:           string;
+}
+
+export interface Balance {
+    id:       string;
+    amount:   number;
+    currency: string;
+    updated:  string;
+}
+
+export interface DadosBancario {
+    id:             string;
+    type:           string;
+    accountCreated: null;
+    accountType:    string;
+    name:           string;
+    taxId:          string;
+    ownerType:      null;
+    bankName:       string;
+    ispb:           string;
+    branchCode:     string;
+    accountNumber:  string;
+    status:         string;
+}
+```
 
 <br>
 <br>
