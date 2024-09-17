@@ -24,11 +24,10 @@ body:
 Response:
 ```
 export interface Login {
-    isLogged:       boolean;
-    token:          string;
     dadosBancarios: DadosBancario[];
     balance:        Balance;
     role:           string;
+    secret: 	    string;
 }
 
 export interface Balance {
@@ -52,6 +51,54 @@ export interface DadosBancario {
     accountNumber:  string;
     status:         string;
 }
+```
+
+<br>
+<br>
+<br>
+
+ `post` **/login2fa**
+<br>
+body:
+```
+{
+	"user":"usuario_do_gustavo",
+	"code":"codigo_do_authenticator_gustavo"
+}
+```
+<br>
+
+Response:
+```
+export interface Login {
+    isLogged:       boolean;
+    token:          string;
+}
+
+```
+
+<br>
+<br>
+<br>
+
+ `post` **/login2fa**
+<br>
+body:
+```
+{
+	"user":"usuario_do_gustavo",
+	"code":"codigo_do_authenticator_gustavo"
+}
+```
+<br>
+
+Response:
+```
+export interface Login {
+    isLogged:       boolean;
+    token:          string;
+}
+
 ```
 
 <br>
