@@ -15,8 +15,8 @@ obs: Alguns valores devem ser tratados como centavos
 body:
 ```json
 {
-	"user":"usuario_do_gustavo",
-	"password":"senha_do_gustavo"
+	"user":		"usuario_do_gustavo",
+	"password":	"senha_do_gustavo"
 }
 ```
 <br>
