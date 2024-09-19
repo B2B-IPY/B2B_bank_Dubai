@@ -97,7 +97,7 @@ body:
 
 Response:
 ```typescript
-export interface Login {
+export interface Login2fa {
     	isLogged:       boolean;
     	token:          string;
 }
