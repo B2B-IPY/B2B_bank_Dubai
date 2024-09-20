@@ -13,22 +13,23 @@ obs: Alguns valores devem ser tratados como centavos
  `post` **/login**
 <br>
 body:
-```
+```json
 {
-	"user":"usuario_do_gustavo",
-	"password":"senha_do_gustavo"
+	"user":		"usuario_do_gustavo",
+	"password":	"senha_do_gustavo"
 }
 ```
 <br>
 
 Response:
-```
+```typescript
 export interface Login {
-    isLogged:       boolean;
-    token:          string;
     dadosBancarios: DadosBancario[];
     balance:        Balance;
     role:           string;
+    secret: 	    boolean;
+    new_secret:     string;
+    qr_code:        string;
 }
 
 export interface Balance {
@@ -58,12 +59,60 @@ export interface DadosBancario {
 <br>
 <br>
 
- `get` **/balance**
+ `post` **/ativar2fa**
 <br>
-Verifica o saldo disponivel em conta
+body:
+```json
+{
+	"user":		"usuario_do_gustavo",
+	"password":	"senha_do_gustavo",
+	"new_secret":	"new_secret",
+	"code":		"codigo_do_authenticator_do_gustavo"
+}
+```
+<br>
+
+Response:
+```json
+{
+	"status": "autenticação de dois fatores ativada com sucesso!"
+}
+```
+
+<br>
+<br>
+<br>
+
+ `post` **/login2fa**
+<br>
+body:
+```json
+{
+	"user":		"usuario_do_gustavo",
+	"password":	"senha_do_gustavo"
+	"code":		"codigo_do_authenticator_gustavo"
+}
+```
+<br>
+
+Response:
+```typescript
+export interface Login2fa {
+    	isLogged:       boolean;
+    	token:          string;
+}
+```
+
+<br>
+<br>
+<br>
+
+ `get` **/delete-secret/:user**
+<br>
+Exemplo: /delete-secret/gustavo123
 
 Headers:
-```
+```json
 {
 	"x-access-token":"token recebido pela rota /login",
 }
@@ -71,7 +120,30 @@ Headers:
 <br>
 
 Response:
+```json
+{
+	"status": "Autenticação de dois fatores removida "
+}
 ```
+
+<br>
+<br>
+<br>
+
+ `get` **/balance**
+<br>
+Verifica o saldo disponivel em conta
+
+Headers:
+```json
+{
+	"x-access-token":"token recebido pela rota /login",
+}
+```
+<br>
+
+Response:
+```typescript
 export interface Balance {
     id:       string;
     amount:   number;
@@ -90,7 +162,7 @@ export interface Balance {
 Verifica todos os dados da conta
 
 Headers:
-```
+```json
 {
 	"x-access-token":"token recebido pela rota /login",
 }
@@ -98,7 +170,7 @@ Headers:
 <br>
 
 Response:
-```
+```typescript
 export interface Dashboard {
     tpv:                      Cashin;
     cashin:                   Cashin;
@@ -137,7 +209,7 @@ Exemplo: /transferir/pix/verificar/+5577991922123
 
 
 Headers:
-```
+```json
 {
 	"x-access-token":"token recebido pela rota /login",
 }
@@ -147,7 +219,7 @@ Headers:
 
 
 Response:
-```
+```typescript
 export interface ChavePix {
     id:             string;
     type:           string;
@@ -176,7 +248,7 @@ export interface ChavePix {
 
 
 Headers:
-```
+```json
 {
 	"x-access-token":"token recebido pela rota /login",
 }
@@ -185,7 +257,7 @@ Headers:
 <br>
 
 Body:
-```
+```json
 {
   "amount": 10000,
   "name": "Fatimah Ardrey",
@@ -198,7 +270,7 @@ Body:
 <br>
 
 Response:
-```
+```typescript
 export interface Pix {
     id:                 string;
     amount:             number;
@@ -236,7 +308,7 @@ export interface Metadata {
 
 
 Headers:
-```
+```json
 {
 	"x-access-token":"token recebido pela rota /login",
 }
@@ -245,7 +317,7 @@ Headers:
 <br>
 
 Body:
-```
+```json
 {  
   "line": "26090387873966093725124200000008198000000002000",
   "taxId": "33.435.177/0001-22"  
@@ -268,7 +340,7 @@ string
 
 
 Headers:
-```
+```json
 {
 	"x-access-token":"token recebido pela rota /login",
 }
@@ -276,7 +348,7 @@ Headers:
 <br>
 
 Response:
-```
+```typescript
 export interface Extrato {
     cashout: Cashout[];
     cashin:  Cashin[];
@@ -346,7 +418,7 @@ export interface Metadata {
 
 
 Headers:
-```
+```json
 {
 	"x-access-token":"token recebido pela rota /login",
 }
@@ -355,7 +427,7 @@ Headers:
 <br>
 
 Body:
-```
+```json
 {  
   "amount": "100"
   
@@ -364,7 +436,7 @@ Body:
 <br>
 
 Response:
-```
+```typescript
 export interface PixQRcode {
     id:         string;
     amount:     number;
@@ -387,7 +459,7 @@ export interface PixQRcode {
 
 
 Headers:
-```
+```json
 {
 	"x-access-token":"token recebido pela rota /login",
 }
@@ -395,7 +467,7 @@ Headers:
 <br>
 
 Body:
-```
+```json
 {
   "amount": 1000,
   "name": "Iron Bank S.A.",
@@ -411,7 +483,7 @@ Body:
 <br>
 
 Response:
-```
+```typescript
 export interface Boleto {
     id:             string;
     amount:         number;
@@ -455,7 +527,7 @@ export interface Boleto {
 Exemplo: /boleto/pdf/6068705911898112
 
 Headers:
-```
+```json
 {
 	"x-access-token":"token recebido pela rota /login",
 }
