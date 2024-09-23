@@ -21,7 +21,7 @@ body:
 ```
 <br>
 
-caso esse usuario tiver o 2FA ativo, o secrect vai retorna true, caso contrario, vai retornar false.
+caso esse usuario tiver o 2FA ativo, o secret vai retorna true, caso contrario, vai retornar false.
 caso retorne false, tambem ira retornar o new_secrect e o qr_code para ser utilizado na rota /ativar2fa
 
 <br>
