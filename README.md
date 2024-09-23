@@ -107,28 +107,7 @@ export interface Login2fa {
 <br>
 <br>
 
- `get` **/delete-secret/:user**
-<br>
-Exemplo: /delete-secret/gustavo123
 
-Headers:
-```json
-{
-	"x-access-token":"token recebido pela rota /login",
-}
-```
-<br>
-
-Response:
-```json
-{
-	"status": "Autenticação de dois fatores removida "
-}
-```
-
-<br>
-<br>
-<br>
 
  `get` **/balance**
 <br>
