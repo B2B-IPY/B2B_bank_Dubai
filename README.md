@@ -116,7 +116,7 @@ Verifica o saldo disponivel em conta
 Headers:
 ```json
 {
-	"x-access-token":"token recebido pela rota /login",
+	"x-access-token":"token recebido pela rota /login2fa",
 }
 ```
 <br>
@@ -143,7 +143,7 @@ Verifica todos os dados da conta
 Headers:
 ```json
 {
-	"x-access-token":"token recebido pela rota /login",
+	"x-access-token":"token recebido pela rota /login2fa",
 }
 ```
 <br>
@@ -190,7 +190,7 @@ Exemplo: /transferir/pix/verificar/+5577991922123
 Headers:
 ```json
 {
-	"x-access-token":"token recebido pela rota /login",
+	"x-access-token":"token recebido pela rota /login2fa",
 }
 ```
 
@@ -229,7 +229,7 @@ export interface ChavePix {
 Headers:
 ```json
 {
-	"x-access-token":"token recebido pela rota /login",
+	"x-access-token":"token recebido pela rota /login2fa",
 }
 ```
 
@@ -289,7 +289,7 @@ export interface Metadata {
 Headers:
 ```json
 {
-	"x-access-token":"token recebido pela rota /login",
+	"x-access-token":"token recebido pela rota /login2fa",
 }
 ```
 
@@ -321,7 +321,7 @@ string
 Headers:
 ```json
 {
-	"x-access-token":"token recebido pela rota /login",
+	"x-access-token":"token recebido pela rota /login2fa",
 }
 ```
 <br>
@@ -399,7 +399,7 @@ export interface Metadata {
 Headers:
 ```json
 {
-	"x-access-token":"token recebido pela rota /login",
+	"x-access-token":"token recebido pela rota /login2fa",
 }
 ```
 
@@ -440,7 +440,7 @@ export interface PixQRcode {
 Headers:
 ```json
 {
-	"x-access-token":"token recebido pela rota /login",
+	"x-access-token":"token recebido pela rota /login2fa",
 }
 ```
 <br>
@@ -508,7 +508,7 @@ Exemplo: /boleto/pdf/6068705911898112
 Headers:
 ```json
 {
-	"x-access-token":"token recebido pela rota /login",
+	"x-access-token":"token recebido pela rota /login2fa",
 }
 ```
 <br>
