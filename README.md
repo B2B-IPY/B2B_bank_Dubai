@@ -21,6 +21,11 @@ body:
 ```
 <br>
 
+caso esse usuario tiver o 2FA ativo, o secrect vai retorna true, caso contrario, vai retornar false.
+caso retorne false, tambem ira retornar o new_secrect e o qr_code para ser utilizado na rota /ativar2fa
+
+<br>
+
 Response:
 ```typescript
 export interface Login {
@@ -61,13 +66,18 @@ export interface DadosBancario {
 
  `post` **/ativar2fa**
 <br>
+
+caso não tenha o 2FA ativado, na rota /login vai retornar o qr_code e o new_secret, leia o QR code retornado ou insira o new_screcet em seu google authenticator para obter o code/totp, informe o new_secret no body dessa requisição juntamente com o user, password e o codigo totp disponivel em seu google authenticator para ativar o 2FA e conseguir fazer login na rota /login2fa
+
+<br>
+
 body:
 ```json
 {
 	"user":		"usuario_do_gustavo",
 	"password":	"senha_do_gustavo",
 	"new_secret":	"new_secret",
-	"code":		"codigo_do_authenticator_do_gustavo"
+	"code":		"totp_do_google_authenticator"
 }
 ```
 <br>
@@ -85,12 +95,17 @@ Response:
 
  `post` **/login2fa**
 <br>
+
+após ter ativado o 2FA seguindo as etapas acima, informe o user, password e codigo totp do seu google authenticator no corpo dessa requisição para ser retornado o x-access-token/token (token de validação de login usado no header das outras requisições)
+
+<br>
+
 body:
 ```json
 {
 	"user":		"usuario_do_gustavo",
 	"password":	"senha_do_gustavo"
-	"code":		"codigo_do_authenticator_gustavo"
+	"code":		"totp_do_google_authenticator"
 }
 ```
 <br>
