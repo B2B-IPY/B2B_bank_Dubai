@@ -10,6 +10,7 @@ export class Account {
 
   async balance(): Promise<{ status: number; data: any }> {
     const header = await this.sign.header();
+
     const url: string = process.env.URL_API as string;
 
     const result = await axios.get(

@@ -8,7 +8,7 @@ async function balance(req: UserRequest, res: Response) {
   if (!id) return res.status(404).json({ message: "ID desconhecido" });
   const result = await SDK.SubContas.balance(id);
   if (!result[0]) return res.status(404).json({ message: "não encontrada" });
-  res.status(200).json(result);
+  res.status(200).json(result[0]);
 }
 
 export default balance;
