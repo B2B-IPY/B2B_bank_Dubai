@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="black-card" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 196 111" style="enable-background:new 0 0 196 111;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#003366;}
+	.st1{fill:#BDC6D8;}
+	.st2{fill:#ACB6CB;}
+	.st3{fill:#D3DBEA;}
+	.st4{fill:url(#card_chip_00000163788326915607485290000017103747636126634652_);}
+</style>
+<g id="group_card" transform="translate(-401 -275)">
+	<path id="card_shape" class="st0" d="M407,275h184c3.3,0,6,2.7,6,6v99c0,3.3-2.7,6-6,6H407c-3.3,0-6-2.7-6-6v-99
+		C401,277.7,403.7,275,407,275z"/>
+	<g id="master_card_logo" transform="translate(10 8)">
+		<path id="middle-element" class="st1" d="M555.1,349.7h7.7v12.6h-7.7L555.1,349.7z"/>
+		<path id="left-element" class="st2" d="M555.9,356c0-2.5,1.1-4.8,3.1-6.3c-3.5-2.7-8.5-2.1-11.3,1.4c-2.7,3.5-2.1,8.5,1.4,11.3
+			c2.9,2.3,7,2.3,9.9,0C557.1,360.8,555.9,358.5,555.9,356z"/>
+		<path id="right-element" class="st3" d="M572,356c0,4.4-3.6,8-8,8c-1.8,0-3.5-0.6-5-1.7c3.5-2.7,4.1-7.8,1.4-11.3
+			c-0.4-0.5-0.8-1-1.4-1.4c3.5-2.7,8.5-2.1,11.3,1.4C571.4,352.5,572,354.2,572,356L572,356z"/>
+	</g>
+	
+		<linearGradient id="card_chip_00000098926294796988225310000017947934334265406898_" gradientUnits="userSpaceOnUse" x1="22.0225" y1="803.2214" x2="21.1375" y2="802.2214" gradientTransform="matrix(19 0 0 -16 16 13175)">
+		<stop  offset="0" style="stop-color:#E7EDF7"/>
+		<stop  offset="1" style="stop-color:#C3CAD9"/>
+	</linearGradient>
+	<path id="card_chip" style="fill:url(#card_chip_00000098926294796988225310000017947934334265406898_);" d="M421,323h11
+		c2.2,0,4,1.8,4,4v8c0,2.2-1.8,4-4,4h-11c-2.2,0-4-1.8-4-4v-8C417,324.8,418.8,323,421,323z"/>
+</g>
+</svg>
