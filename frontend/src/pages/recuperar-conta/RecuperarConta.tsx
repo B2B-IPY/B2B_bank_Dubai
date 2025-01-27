@@ -29,7 +29,7 @@ function RecuperarConta() {
       setIsLoading(true);
 
       axios
-         .post("https://api.noutbank.com.br/recuperar-conta", {
+         .post("http://localhost:2311/recuperar-conta", {
             user: user,
             totp: totp,
          })

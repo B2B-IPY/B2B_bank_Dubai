@@ -27,7 +27,7 @@ function ViewerList() {
          navigate("/login");
 
       axios
-         .get("https://api.noutbank.com.br/viewer", headers)
+         .get("http://localhost:2311/viewer", headers)
          .then((res) => {
             const data = res.data;
             setData(data);
@@ -87,7 +87,7 @@ function ViewerList() {
                                        setIsLoading(true);
                                        axios
                                           .delete(
-                                             `https://api.noutbank.com.br/viewer/${item.id}`,
+                                             `http://localhost:2311/viewer/${item.id}`,
                                              headers
                                           )
                                           .then(() => {

@@ -11,32 +11,45 @@ import { GrClose } from "react-icons/gr";
 import { MdClose } from "react-icons/md";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { ComprovantePix } from "../../../functions/createPixPDF";
+import normalizeTimeStamp from "../../../functions/normalizeTimeStamp";
 interface data {
    amount: number;
-   key: string;
+   name: string;
+   taxId: string;
+   accountNumber: string;
+   branchCode: string;
    code: string;
 }
 export interface PixResponse {
-   statusCode: number;
-   transactionId: string;
-   data: {
-      account: null;
-      isbp: null;
-      amount: string;
-      branch: null;
-      typeKey: null;
-      key: string;
-      name: null;
-      subType: string;
-      status: string;
-      type: string;
-      externalId: null;
-      remittanceInformation: string;
-      createdAt: Date;
-      uuid: string;
-      documentNumber: string;
-      bankName: null;
-   };
+   id: string;
+   amount: number;
+   name: string;
+   taxId: string;
+   bankCode: string;
+   branchCode: string;
+   accountNumber: string;
+   accountType: string;
+   externalId: string;
+   scheduled: string;
+   description: string;
+   displayDescription: string;
+   tags: any[];
+   rules: any[];
+   fee: number;
+   status: string;
+   transactionIds: any[];
+   metadata: string;
+   created: string;
+   updated: string;
+}
+
+export interface Res {
+   type: string;
+   pix_key: { key: string; type: string };
+   txid: string;
+   amount: number;
+   receiver: { name: string; city: string };
+   payer_question: null;
 }
 
 function BRLtoNumber(brl: string) {
@@ -51,13 +64,23 @@ function formatarNumeroParaBRL(numero: number): string {
    return formatoMoeda.format(numero).replace("R$", "").trim();
 }
 
-const TransferirPix: React.FC = () => {
+const TransferirPixCopiaCola: React.FC = () => {
    const [data, setData] = useState<data>({
       amount: 0,
-      key: "",
+      name: "",
+      taxId: "",
+      accountNumber: "",
+      branchCode: "",
       code: "",
    });
-
+   const [resp, setResp] = useState<Res>({
+      type: "",
+      pix_key: { key: "", type: "" },
+      txid: "",
+      amount: 0,
+      receiver: { name: "", city: "" },
+      payer_question: null,
+   });
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [totpModal, setTotpModal] = useState<boolean>(false);
    const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -97,7 +120,128 @@ const TransferirPix: React.FC = () => {
                   </div>
                </dialog>
             )}
+            {totpModal && (
+               <dialog className="backdrop-blur-xl flex justify-center items-center bg-transparent h-full w-full absolute py-20 top-0 overflow-y-auto">
+                  <div className="flex flex-col   items-center justify-center bg-[var(--background-secound-color)] border-2 border-[var(--border-color2)]">
+                     <div className="flex w-full text-[var(--title-primary-color)] items-center justify-between px-4 py-6 border-b border-[var(--border-color2)]">
+                        <span className="text-[18px] font-semibold">
+                           Confirme o TOTP
+                        </span>
+                        <div
+                           className="cursor-pointer"
+                           onClick={() => {
+                              setTotpModal(false);
+                           }}
+                        >
+                           <MdClose className="text-[26px] " />
+                        </div>
+                     </div>
 
+                     <div className="w-full flex flex-col items-center ">
+                        <div className="w-[90%] flex flex-col py-4 gap-4 border-b-2 border-[var(--border-color)] ">
+                           <span className=" text-[var(--title-primary-color)] text-[18px] font-semibold">
+                              Digite o código de autenticação digital
+                           </span>
+                           <span className="text-[15px] text-[var(--title-primary-color)]">
+                              Enviamos o código de autenticação para seu GOOGLE
+                              AUTHENTICATOR.
+                           </span>
+                           <div className="flex">
+                              <input
+                                 type="text"
+                                 id="totpCode"
+                                 onInput={(e) => {
+                                    const value = e.currentTarget.value;
+                                    setData({
+                                       ...data,
+                                       code: value,
+                                    });
+                                 }}
+                                 className="TOTP text-[var(--white-color2)]  border-2 border-[var(--border-color2)] rounded-lg px-4 w py-2 w-[80%] focus:border-[var(--active-color)] focus:border-2 bg-transparent"
+                                 placeholder="000000"
+                              />
+                           </div>
+                           <div className="flex">
+                              <div
+                                 onClick={() => {
+                                    setTotpModal(false);
+                                 }}
+                                 className="flex w-[full] gap-2 cursor-pointer items-center text-[#2c80ff]"
+                              >
+                                 <IoMdArrowRoundBack /> Voltar
+                              </div>
+                           </div>
+                        </div>
+                        <div className="w-[90%] flex justify-end py-5 gap-4">
+                           <button
+                              onClick={() => {
+                                 if (isLoading) return;
+                                 if (!data.code)
+                                    return toast.warn("digite o TOTP");
+                                 setIsLoading(true);
+
+                                 axios
+                                    .post(
+                                       "http://localhost:2311/pix/emv/pagar",
+                                       {
+                                          value: resp.amount,
+                                          pixAddressKey: data.taxId,
+                                          code: data.code,
+                                       },
+                                       headers
+                                    )
+                                    .then((res) => {
+                                       console.log(res.data);
+
+                                       setTotpModal(false);
+                                       toast.success(
+                                          "Transferência realizada com sucesso"
+                                       );
+
+                                       const currentTime =
+                                          new Date().toLocaleTimeString();
+
+                                       const blob = ComprovantePix(
+                                          resp.pix_key.key,
+                                          resp.receiver.name,
+                                          "",
+                                          res.data.received_bank_account.Bank
+                                             .name,
+                                          res.data.received_bank_account.agency,
+                                          res.data.received_bank_account
+                                             .account,
+                                          "",
+                                          formatarNumeroParaBRL(resp.amount),
+                                          (res.data.id as number).toString(),
+                                          currentTime,
+                                          normalizeTimeStamp(
+                                             res.data.created_at
+                                          )
+                                       );
+                                       setIframeUrl(blob);
+                                    })
+                                    .catch((err) => {
+                                       console.error(err);
+
+                                       return toast.warn(
+                                          err.response.data.description ||
+                                             "Ocorreu um erro na transferência"
+                                       );
+                                    })
+                                    .finally(() => {
+                                       setIsLoading(false);
+                                       setModalVisible(false);
+                                    });
+                              }}
+                              className=" transition flex gap-2 items-center justify-center h-10 text-[var(--white-color2)]  focus:outline-none  font-medium rounded-lg text-sm w-[140px]  py-2 text-center bg-[var(--primary-color)] hover:bg-transparent hover:border-[var(--primary-color)] hover:border-2 hover:text-[var(--primary-color)]"
+                           >
+                              {isLoading ? "carregando..." : "Transferir"}
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               </dialog>
+            )}
             <dialog
                open={modalVisible}
                className="backdrop-blur-xl	 bg-transparent h-full w-full absolute top-0"
@@ -121,15 +265,15 @@ const TransferirPix: React.FC = () => {
                      <div className="flex  w-full max-[1000px]:items-center min-[1000px]:px-40 mt-20 flex-col gap-4">
                         <div className="flex-col gap-4 flex">
                            <div className="text-gray-300 flex items-center gap-4">
-                              <BiKey size={25} />
+                              <BiUser size={25} />
                               <span className="text-bold text-sm">
-                                 {data.key}
+                                 {resp.receiver.name}
                               </span>
                            </div>
                            <div className="text-gray-300 flex items-center gap-4">
                               <HiCash size={25} />
                               <span className="text-bold text-sm">
-                                 R$ {formatarNumeroParaBRL(data.amount || 0)}
+                                 R$ {formatarNumeroParaBRL(resp.amount || 0)}
                               </span>
                            </div>
                         </div>
@@ -137,13 +281,23 @@ const TransferirPix: React.FC = () => {
                      <div className="flex gap-10 w-full justify-center mb-10  mt-10 items-center ">
                         <div
                            onClick={() => {
+                              const required2fa =
+                                 localStorage.getItem("required_2fa");
+
+                              if (required2fa === "1") {
+                                 setModalVisible(false);
+
+                                 return setTotpModal(true);
+                              }
                               setIsLoading(true);
                               axios
                                  .post(
-                                    "http://localhost:2311/transfers/pix",
+                                    "http://localhost:2311/pix/emv/pagar",
                                     {
-                                       key: data.key,
-                                       amount: data.amount,
+                                       code: data.code,
+
+                                       pixAddressKey: data.taxId,
+                                       value: resp.amount,
                                     },
 
                                     headers
@@ -160,17 +314,17 @@ const TransferirPix: React.FC = () => {
                                        new Date().toLocaleTimeString();
 
                                     const blob = ComprovantePix(
-                                       res.data.bankAccount.pixAddressKey,
-                                       res.data.bankAccount.ownerName,
-                                       res.data.bankAccount.cpfCnpj,
-                                       res.data.bankAccount.bank.name,
-                                       res.data.bankAccount.agency,
-                                       res.data.bankAccount.account,
-                                       res.data.bankAccount.accountDigit,
-                                       formatarNumeroParaBRL(data.amount),
-                                       res.data.id,
+                                       resp.pix_key.key,
+                                       resp.receiver.name,
+                                       "",
+                                       res.data.received_bank_account.Bank.name,
+                                       res.data.received_bank_account.agency,
+                                       res.data.received_bank_account.account,
+                                       "",
+                                       formatarNumeroParaBRL(resp.amount),
+                                       (res.data.id as number).toString(),
                                        currentTime,
-                                       res.data.scheduleDate
+                                       normalizeTimeStamp(res.data.created_at)
                                     );
                                     setIframeUrl(blob);
                                  })
@@ -206,11 +360,11 @@ const TransferirPix: React.FC = () => {
 
             <section className="max-[1000px]:w-full max-[1000px]:h-full w-[800px] my-10">
                <div className="flex flex-col items-center  px-6 py-8 mx-auto max-[1000px]:px-0 max-[1000px]:py-0  lg:py-0 w-full h-full">
-                  {!modalVisible && (
+                  {!modalVisible && !totpModal && (
                      <div className="w-full  min-[1000px]:bg-[var(--background-secound-color)] rounded-lg shadow  md:mt-0 xl:p-0 w-full h-full">
                         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                            <h1 className="text-xl font-bold leading-tight tracking-tight text-[var(--title-primary-color)] md:text-2xl">
-                              Transferir Pix
+                              Transferir Pix Copia e Cola
                            </h1>
                            <form
                               className="space-y-4 md:space-y-6"
@@ -220,28 +374,26 @@ const TransferirPix: React.FC = () => {
                                  if (isLoading) return;
                                  setIsLoading(true);
 
-                                 if (!data.amount) {
-                                    setIsLoading(false);
-                                    return toast.warning("valor invalido");
-                                 }
-                                 setModalVisible(true);
-                                 setIsLoading(false);
-                                 // axios
-                                 //    .get(
-                                 //       `http://localhost:2311/pix/consultar/${data.key}/${pixAdressKey}`,
-                                 //       headers
-                                 //    )
-                                 //    .then((res) => {
-                                 //       console.log(res.data);
-                                 //       setModalVisible(true);
-                                 //    })
-                                 //    .catch((err) => {
-                                 //       console.log(err);
-                                 //       toast.error("Chave pix não encontrada");
-                                 //    })
-                                 //    .finally(() => {
-                                 //       setIsLoading(false);
-                                 //    });
+                                 axios
+                                    .post(
+                                       `http://localhost:2311/pix/emv/consultar`,
+                                       {
+                                          key: data.taxId,
+                                       },
+                                       headers
+                                    )
+                                    .then((res) => {
+                                       console.log(res.data);
+                                       setResp(res.data);
+                                       setModalVisible(true);
+                                    })
+                                    .catch((err) => {
+                                       console.log(err);
+                                       toast.error("Chave pix não encontrada");
+                                    })
+                                    .finally(() => {
+                                       setIsLoading(false);
+                                    });
                               }}
                            >
                               <div className="flex flex-col gap-10 w-full max-[1000px]:flex-col">
@@ -257,7 +409,7 @@ const TransferirPix: React.FC = () => {
                                        <div className="flex w-full gap-5 justify-between">
                                           <input
                                              type="text"
-                                             id="key"
+                                             id="taxId"
                                              className="w-full bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] block  p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)]"
                                              required
                                              onInput={(e) => {
@@ -266,40 +418,11 @@ const TransferirPix: React.FC = () => {
 
                                                 setData({
                                                    ...data,
-                                                   key: value,
+                                                   taxId: value,
                                                 });
                                              }}
                                           />
                                        </div>
-                                    </div>
-                                 </div>
-
-                                 <h2 className="text-[var(--title-primary-color)] text-xl font-bold">
-                                    Dados da Transferência
-                                 </h2>
-                                 <div className="grid gap-5 w-full">
-                                    <div>
-                                       <label
-                                          htmlFor="valor"
-                                          className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] "
-                                       >
-                                          valor
-                                       </label>
-                                       <input
-                                          type="text"
-                                          id="valor"
-                                          placeholder="0"
-                                          className="MONEY bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] block w-full p-2.5 max-[1000px]:bg-transparent max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)]"
-                                          onInput={(e) => {
-                                             setData({
-                                                ...data,
-                                                amount: BRLtoNumber(
-                                                   e.currentTarget.value
-                                                ),
-                                             });
-                                          }}
-                                          required
-                                       />
                                     </div>
                                  </div>
                               </div>
@@ -324,4 +447,4 @@ const TransferirPix: React.FC = () => {
       </>
    );
 };
-export default TransferirPix;
+export default TransferirPixCopiaCola;

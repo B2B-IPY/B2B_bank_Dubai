@@ -98,7 +98,7 @@ function Dasboard() {
    };
    useEffect(() => {
       axios
-         .post("https://api.noutbank.com.br/dashboard-cliente", {}, headers)
+         .post("http://localhost:2311/dashboard-cliente", {}, headers)
          .then((res) => {
             // setData(res.data);
             // setUsers(res.data.users);
@@ -598,7 +598,7 @@ function Dasboard() {
 
                                     axios
                                        .post(
-                                          "https://api.noutbank.com.br/dashboard",
+                                          "http://localhost:2311/dashboard",
                                           {
                                              user: e.currentTarget.value,
                                           },

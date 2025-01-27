@@ -52,7 +52,7 @@ function LogsList() {
    };
    function filtrarPagina(pagina: number) {
       axios
-         .post("https://api.noutbank.com.br/logs", { pagina: pagina }, headers)
+         .post("http://localhost:2311/logs", { pagina: pagina }, headers)
          .then((res) => {
             const data = res.data;
 

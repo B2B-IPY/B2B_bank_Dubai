@@ -85,7 +85,7 @@ function AberturaDeContas() {
 
    //    setIsLoading(true);
    //    axios
-   //       .post("https://api.noutbank.com.br/accounts/criar", {
+   //       .post("http://localhost:2311/accounts/criar", {
    //          user: request.user,
    //          nome: request.nome,
    //          email: request.email,
@@ -458,7 +458,7 @@ function AberturaDeContas() {
 
                                     axios
                                        .post(
-                                          "https://api.noutbank.com.br/abertura-de-contas/solicitar",
+                                          "http://localhost:2311/abertura-de-contas/solicitar",
                                           formadata,
                                           {
                                              headers: {

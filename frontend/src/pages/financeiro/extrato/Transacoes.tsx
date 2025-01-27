@@ -58,7 +58,7 @@ function Transacoes() {
       setIsLoading(true);
 
       axios
-         .post("https://api.noutbank.com.br/financialTransactions", {}, headers)
+         .post("http://localhost:2311/financialTransactions", {}, headers)
          .then(({ data }) => {
             console.log(data);
 

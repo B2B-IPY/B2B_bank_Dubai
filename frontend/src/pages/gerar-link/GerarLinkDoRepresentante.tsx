@@ -113,7 +113,7 @@ function GerarLinkDoRepresentante() {
          navigate("/login");
 
       axios
-         .get("https://api.noutbank.com.br/representantes", headers)
+         .get("http://localhost:2311/representantes", headers)
          .then(({ data }) => {
             console.log(data);
 

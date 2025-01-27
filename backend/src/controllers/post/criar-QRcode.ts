@@ -8,7 +8,9 @@ import SDK_DubaiCash_B2B from "../../utils/sdk-dubaicash-b2b";
 
 async function CreateQRcode(req: UserRequest, res: Response) {
    const body: CreateQR = req.body;
-   console.log(body);
+   const id = req.id_logins;
+   const document = req.cpfCnpj?.replace(/[^0-9]/g, "");
+   console.log(document);
 
    const valid = CreateQRZod.safeParse(body);
    if (!valid.success) {
@@ -16,9 +18,9 @@ async function CreateQRcode(req: UserRequest, res: Response) {
    }
    const SDK = new SDK_DubaiCash_B2B();
 
-   const pix = await SDK.Transactions.CreateQR(body);
+   const QRcode = await SDK.Transactions.CreateQR(body, id, document);
 
-   res.status(pix.status || 200).json(pix.data);
+   res.status(QRcode.status || 200).json(QRcode.data);
 }
 
 export default CreateQRcode;

@@ -52,7 +52,7 @@ function Sidebar(props: Props) {
                            onClick={(e: MouseEvent<HTMLDivElement>) => {
                               const box = e.currentTarget
                                  .parentNode as HTMLElement;
-                              box.classList.toggle("h-[150px]");
+                              box.classList.toggle("h-[100px]");
                            }}
                         >
                            <BiListCheck size={28} />
@@ -68,16 +68,6 @@ function Sidebar(props: Props) {
                               }
                            >
                               Transações
-                           </NavLink>
-                           <NavLink
-                              to="/financeiro/boletos"
-                              className={({ isActive }) =>
-                                 isActive
-                                    ? "text-[var(--title-primary-color)] flex gap-2 font-semibold py-2 pl-3 rounded-lg border-b border-[var(--primary-color)] text-sm"
-                                    : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
-                              }
-                           >
-                              Boletos
                            </NavLink>
                         </div>
                      </div>
@@ -121,7 +111,7 @@ function Sidebar(props: Props) {
                            onClick={(e: MouseEvent<HTMLDivElement>) => {
                               const box = e.currentTarget
                                  .parentNode as HTMLElement;
-                              box.classList.toggle(`h-[240px]`);
+                              box.classList.toggle(`h-[170px]`);
                            }}
                         >
                            <MdAttachMoney size={24} />
@@ -136,7 +126,7 @@ function Sidebar(props: Props) {
                                     : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
                               }
                            >
-                              QR code
+                              Gerar QR Code
                            </NavLink>
 
                            <NavLink
@@ -147,7 +137,7 @@ function Sidebar(props: Props) {
                                     : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
                               }
                            >
-                              Saque
+                              Transferir PIX
                            </NavLink>
                            <NavLink
                               to="/financeiro/transferencia/pix-copiaCola"
@@ -158,26 +148,6 @@ function Sidebar(props: Props) {
                               }
                            >
                               Pix copia e cola
-                           </NavLink>
-                           <NavLink
-                              to="/financeiro/pagamentos/boleto"
-                              className={({ isActive }) =>
-                                 isActive
-                                    ? "text-[var(--title-primary-color)] flex gap-2 font-semibold py-2 pl-3 rounded-lg border-b border-[var(--primary-color)] text-sm"
-                                    : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
-                              }
-                           >
-                              pgto boleto
-                           </NavLink>
-                           <NavLink
-                              to="/financeiro/gerar-boleto"
-                              className={({ isActive }) =>
-                                 isActive
-                                    ? "text-[var(--title-primary-color)] flex gap-2 font-semibold py-2 pl-3 rounded-lg border-b border-[var(--primary-color)] text-sm"
-                                    : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
-                              }
-                           >
-                              Gerar boleto
                            </NavLink>
                         </div>
                      </div>

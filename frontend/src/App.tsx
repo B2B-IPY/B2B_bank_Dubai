@@ -33,11 +33,11 @@ function App() {
    function reloadBalance() {
       setSaldo("");
       axios
-         .get("https://api.noutbank.com.br/statement/balance", headers)
+         .get("http://localhost:2311/balance", headers)
          .then((response) => {
             console.log(response.data);
 
-            let amount = response.data.value as number;
+            let amount = response.data.valor as number;
 
             userInfos.dispatch(setBalance({ saldo: amount }));
             setSaldo(formatarNumeroParaBRL(amount));

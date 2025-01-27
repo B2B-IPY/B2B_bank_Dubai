@@ -36,7 +36,7 @@ function ViewCartoes() {
          navigate("/login");
 
       axios
-         .get("https://api.noutbank.com.br/cartoes/" + id, headers)
+         .get("http://localhost:2311/cartoes/" + id, headers)
          .then((res) => {
             const data: Cartoes = res.data;
             setData(data);

@@ -22,6 +22,8 @@ import CadastrarViewer from "./pages/viewer/cad-viewer/CadastrarViewer.tsx";
 import GerarLinkDoRepresentante from "./pages/gerar-link/GerarLinkDoRepresentante.tsx";
 import LogsList from "./pages/logs/LogsList.tsx";
 import ListBoletos from "./pages/financeiro/list-boletos/ListBoletos.tsx";
+import CobrarViaQrCode from "./pages/financeiro/cobrar-via-qr-code/CobrarViaQrCode.tsx";
+import TransferirPixCopiaCola from "./pages/financeiro/pix-copia/Pix_copia.tsx";
 
 const router = createBrowserRouter([
    {
@@ -65,6 +67,14 @@ const router = createBrowserRouter([
          {
             path: "/financeiro/transferencia/pix",
             element: <TransferirPix />,
+         },
+         {
+            path: "/financeiro/transferencia/qr-code",
+            element: <CobrarViaQrCode />,
+         },
+         {
+            path: "/financeiro/transferencia/pix-copiaCola",
+            element: <TransferirPixCopiaCola />,
          },
 
          {

@@ -101,7 +101,7 @@ function Transferencias() {
       setIsLoading(true);
 
       axios
-         .post("https://api.noutbank.com.br/transferir/extrato", {}, headers)
+         .post("http://localhost:2311/transferir/extrato", {}, headers)
          .then((res) => {
             setData(res.data);
          })
@@ -126,7 +126,7 @@ function Transferencias() {
       };
 
       axios
-         .post("https://api.noutbank.com.br/transferir/extrato", body, headers)
+         .post("http://localhost:2311/transferir/extrato", body, headers)
          .then((res) => {
             setData(res.data);
          })

@@ -54,7 +54,7 @@ function CadastrarViewer() {
 
                               axios
                                  .post(
-                                    "https://api.noutbank.com.br/viewer/criar",
+                                    "http://localhost:2311/viewer/criar",
                                     requestBody,
                                     headers
                                  )
