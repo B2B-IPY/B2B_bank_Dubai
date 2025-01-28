@@ -1,13 +1,8 @@
 import jsPDF from "jspdf";
 import { logo } from "./logo-base64";
-export function ComprovantePix(
+export function ComprovantePixCopiaCola(
    key: string,
    nomeDestinatario: string,
-   cpfcnpj: string,
-   banco: string,
-   agencia: string,
-   conta: string,
-   // contaDigito: string,
    valor: string,
    idTransferencia: string,
    horarioPagamento: string,
@@ -44,21 +39,12 @@ export function ComprovantePix(
 
    doc.setTextColor("#000");
    doc.setFontSize(12);
-   doc.text("Conta:" + " " + conta, 185, 69, {
-      align: "right",
-   });
 
    doc.setFontSize(12);
-   doc.text("Agencia:" + " " + agencia, 185, 76, { align: "right" });
+   doc.text(key, 185, 76, { align: "right" });
 
    doc.setFontSize(12);
-   doc.text(key, 185, 83, { align: "right" });
-
-   doc.setFontSize(12);
-   doc.text(nomeDestinatario + " - " + cpfcnpj, 185, 90, { align: "right" });
-
-   doc.setFontSize(12);
-   doc.text("Banco:" + " " + banco, 185, 97, { align: "right" });
+   doc.text(nomeDestinatario, 185, 69, { align: "right" });
 
    //esquerda
    doc.setFontSize(18);

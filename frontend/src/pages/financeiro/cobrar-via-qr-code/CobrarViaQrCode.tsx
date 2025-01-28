@@ -34,9 +34,7 @@ function CobrarViaQrCode() {
          "x-access-token": localStorage.getItem("x-access-token"),
       },
    };
-   const [QRcodeData, setQRcodeData] = useState<qrcode>({
-      key: "",
-   });
+   const [QRcodeData, setQRcodeData] = useState<string>("");
    useEffect(() => {
       if (
          !tempoExpiracaoToken(localStorage.getItem("x-access-token") as string)
@@ -68,7 +66,7 @@ function CobrarViaQrCode() {
                         />
                      </div>
                      <div className="pl-16">
-                        <div className="text-gray-300 flex items-center gap-3">
+                        <div className="text-gray-300 flex items-center justify-center gap-3">
                            <MdPix size={25} />
                            <span className="text-bold">
                               Leia o QR code abaixo com a camera ou copie e cole
@@ -77,16 +75,18 @@ function CobrarViaQrCode() {
                         </div>
                         <div className="mt-5 pl-3 items-center justify-center rounded-xl flex gap-3">
                            <img
-                              src={`https://api.qrserver.com/v1/create-qr-code/?size=198x198&data=${QRcodeData.key}`}
+                              src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${QRcodeData}`}
                               alt="qr-code"
-                              className="w-[140px] h-[140px]"
+                              className="w-[190px] h-[190px]"
                            />
                         </div>
                         <div className="flex gap-3 w-full">
                            <div
                               onClick={() => {
                                  //copy id of qRcodeData
-                                 navigator.clipboard.writeText(QRcodeData.key);
+                                 console.log(QRcodeData);
+
+                                 navigator.clipboard.writeText(QRcodeData);
                                  toast.success("Código copiado com sucesso!");
                               }}
                               className="w-full mt-10 cursor-pointer transition text-white focus:outline-none hover:bg-[var(--hover-primary-color)] font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-[var(--primary-color)]"
@@ -117,24 +117,19 @@ function CobrarViaQrCode() {
                                     ($("#valor").val() as string) || "0";
                                  const amount_number = BRLtoNumber(amount);
 
-                                 const requestBody = {
-                                    value: amount_number,
-                                 };
                                  if (isLoading) return;
                                  setIsLoading(true);
 
                                  axios
                                     .post(
-                                       "http://localhost:2311/transferir/pix/qr-code",
-                                       requestBody,
+                                       "http://localhost:2311/pix/cobrar",
+                                       {
+                                          amount: amount_number,
+                                       },
                                        headers
                                     )
                                     .then((res) => {
-                                       console.log(res.data);
-
-                                       setQRcodeData({
-                                          key: res.data.key,
-                                       });
+                                       setQRcodeData(res.data.data.key);
                                        setModalVisible(true);
                                     })
                                     .catch((err) => {

@@ -111,7 +111,8 @@ export class Transactions {
             {
                externalId: externalId,
                amount: body.amount,
-               document: document,
+               document: "85857758580",
+               name: "Gabriel Pereira Firmo de Aguiar",
                expire: 3600,
             },
             header

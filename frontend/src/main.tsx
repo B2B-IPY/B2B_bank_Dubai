@@ -9,7 +9,6 @@ import TransferirPix from "./pages/financeiro/pix/TransferirPix.tsx";
 import Estabelecimentos from "./pages/estabelecimentos/Estabelecimentos.tsx";
 import Dasboard from "./pages/dashboard/dashboard.tsx";
 import Transacoes from "./pages/financeiro/extrato/Transacoes.tsx";
-import Transferencias from "./pages/financeiro/extrato/Transferencias.tsx";
 import Card from "./pages/cartoes/cartoes-list/ListCard.tsx";
 
 import ListCard from "./pages/cartoes/cartoes-list/ListCard.tsx";
@@ -60,10 +59,7 @@ const router = createBrowserRouter([
             path: "/financeiro/boletos",
             element: <ListBoletos />,
          },
-         {
-            path: "/financeiro/extrato/transferencias",
-            element: <Transferencias />,
-         },
+
          {
             path: "/financeiro/transferencia/pix",
             element: <TransferirPix />,

@@ -11,6 +11,7 @@ import { verifySaldo } from "./middleware/verifySaldo";
 import CreateQRcode from "./controllers/post/criar-QRcode";
 import webhook from "./controllers/webhook/webhook";
 import extrato from "./controllers/get/extrato";
+import transferirPixCopiaCola from "./controllers/post/transf-pix-copiaCola";
 
 const router = express.Router();
 
@@ -19,9 +20,10 @@ router.post("/login", login);
 
 router.get("/pix/consultar/:key", JWTverify, consultarChavePix);
 router.post("/pix/transfer", JWTverify, transferirPix);
+router.post("/pix/emv/transfer", JWTverify, transferirPixCopiaCola);
 router.post("/pix/cobrar", JWTverify, CreateQRcode);
 
-router.post("/extrato", JWTverify, extrato);
+router.get("/extrato/:page", JWTverify, extrato);
 
 router.get("/admin/balance", JWTverify, balanceAdmin);
 router.get("/balance", JWTverify, balance);

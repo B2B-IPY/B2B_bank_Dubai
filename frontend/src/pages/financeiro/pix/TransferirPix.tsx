@@ -20,22 +20,22 @@ export interface PixResponse {
    statusCode: number;
    transactionId: string;
    data: {
-      account: null;
-      isbp: null;
+      account: string;
       amount: string;
-      branch: null;
-      typeKey: null;
-      key: string;
-      name: null;
-      subType: string;
-      status: string;
-      type: string;
-      externalId: null;
-      remittanceInformation: string;
-      createdAt: Date;
-      uuid: string;
+      bankName: string;
+      branch: string;
+      createdAt: string;
       documentNumber: string;
-      bankName: null;
+      externalId: string;
+      isbp: string;
+      key: string;
+      name: string;
+      remittanceInformation: string;
+      status: string;
+      subType: string;
+      type: string;
+      typeKey: string;
+      uuid: string;
    };
 }
 
@@ -57,7 +57,28 @@ const TransferirPix: React.FC = () => {
       key: "",
       code: "",
    });
-
+   const [res, setRes] = useState<PixResponse>({
+      statusCode: 0,
+      transactionId: "",
+      data: {
+         account: "",
+         amount: "",
+         bankName: "",
+         branch: "",
+         createdAt: "",
+         documentNumber: "",
+         externalId: "",
+         isbp: "",
+         key: "",
+         name: "",
+         remittanceInformation: "",
+         status: "",
+         subType: "",
+         type: "",
+         typeKey: "",
+         uuid: "",
+      },
+   });
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [totpModal, setTotpModal] = useState<boolean>(false);
    const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -140,7 +161,7 @@ const TransferirPix: React.FC = () => {
                               setIsLoading(true);
                               axios
                                  .post(
-                                    "http://localhost:2311/transfers/pix",
+                                    "http://localhost:2311/pix/transfer",
                                     {
                                        key: data.key,
                                        amount: data.amount,
@@ -150,7 +171,10 @@ const TransferirPix: React.FC = () => {
                                  )
                                  .then((res) => {
                                     console.log(res.data);
-
+                                    console.log(
+                                       res.data.data.createdAt.split("T")[0]
+                                    );
+                                    setRes(res.data);
                                     setTotpModal(false);
                                     toast.success(
                                        "Transferência realizada com sucesso"
@@ -160,31 +184,21 @@ const TransferirPix: React.FC = () => {
                                        new Date().toLocaleTimeString();
 
                                     const blob = ComprovantePix(
-                                       res.data.bankAccount.pixAddressKey,
-                                       res.data.bankAccount.ownerName,
-                                       res.data.bankAccount.cpfCnpj,
-                                       res.data.bankAccount.bank.name,
-                                       res.data.bankAccount.agency,
-                                       res.data.bankAccount.account,
-                                       res.data.bankAccount.accountDigit,
+                                       res.data.data.key,
+                                       res.data.data.name,
+                                       res.data.data.cpfCnpj,
+                                       res.data.data.bankName,
+                                       "",
+                                       res.data.data.account,
                                        formatarNumeroParaBRL(data.amount),
-                                       res.data.id,
+                                       res.data.transactionId,
                                        currentTime,
-                                       res.data.scheduleDate
+                                       res.data.data.createdAt.split("T")[0]
                                     );
                                     setIframeUrl(blob);
                                  })
                                  .catch((err) => {
                                     console.error(err);
-                                    if (err.response.status === 401)
-                                       return toast.warn("Codigo invalido");
-                                    setTotpModal(false);
-                                    if (err.response.status === 409)
-                                       return toast.warn("Pix Duplicado");
-                                    if (err.response.data.description)
-                                       return toast.warn(
-                                          err.response.data.description
-                                       );
 
                                     toast.error(
                                        "Ocorreu um erro na transferência"
