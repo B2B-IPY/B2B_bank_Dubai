@@ -18,41 +18,49 @@ import { HiEye, HiEyeOff } from "react-icons/hi";
 import { hiddenDados } from "../../../functions/toggleHidden";
 import { formatarNumeroParaBRL } from "../../../functions/moeda";
 
+export interface ResponseExtrato {
+   extract: Extrato[];
+   pagination: {
+      count: number;
+      page: number;
+      perPage: number;
+   };
+   statusCode: number;
+}
 export interface Extrato {
-   date: string;
-   data: ExtratoData[];
+   parentId: string;
+   transactionId: string;
+   data: ExtratoData;
 }
 export interface ExtratoData {
-   data: {
-      account: string;
-      amount: string;
-      bankName: string;
-      branch: string;
-      chargerBackId: string;
-      createdAt: string;
-      description: string;
-      documentNumber: string;
-      email: string;
-      endtoendId: string;
-      externalId: string;
-      invoiceId: string;
-      isbp: string;
-      key: string;
-      msgError: string;
-      name: string;
-      partnersId: number;
-      phone: string;
-      remittanceInformation: string;
-      status: string;
-      subType: string;
-      telegramNotification: boolean;
-      transactionId: string;
-      tryCount: number;
-      type: string;
-      typeKey: string;
-      uuid: string;
-      parentId: string;
-   };
+   account: string;
+   amount: string;
+   bankName: string;
+   branch: string;
+   chargerBackId: string;
+   createdAt: string;
+   description: string;
+   documentNumber: string;
+   email: string;
+   endtoendId: string;
+   externalId: string;
+   invoiceId: string;
+   isbp: string;
+   key: string;
+   msgError: string;
+   name: string;
+   partnersId: number;
+   phone: string;
+   remittanceInformation: string;
+   status: string;
+   subType: string;
+   telegramNotification: boolean;
+   transactionId: string;
+   tryCount: number;
+   type: string;
+   typeKey: string;
+   uuid: string;
+   parentId: string;
 }
 
 function convertDate(isoDateString: string): string {
@@ -80,40 +88,15 @@ function Transacoes() {
       },
    };
    const navigate = useNavigate();
-   const [data, setData] = useState<ExtratoData[]>([
-      {
-         data: {
-            account: "",
-            amount: "",
-            bankName: "",
-            branch: "",
-            chargerBackId: "",
-            createdAt: "",
-            description: "",
-            documentNumber: "",
-            email: "",
-            endtoendId: "",
-            externalId: "",
-            invoiceId: "",
-            isbp: "",
-            key: "",
-            msgError: "",
-            name: "",
-            partnersId: 0,
-            phone: "",
-            remittanceInformation: "",
-            status: "",
-            subType: "",
-            telegramNotification: false,
-            transactionId: "",
-            tryCount: 0,
-            type: "",
-            typeKey: "",
-            uuid: "",
-            parentId: "",
-         },
+   const [data, setData] = useState<ResponseExtrato>({
+      extract: [],
+      pagination: {
+         count: 0,
+         page: 0,
+         perPage: 0,
       },
-   ]);
+      statusCode: 200,
+   });
    useEffect(() => {
       setIsLoading(true);
 
@@ -195,50 +178,65 @@ function Transacoes() {
                {data ? (
                   <div className="flex flex-col gap-5">
                      <div className="flex flex-col gap-6">
-                        {data.map((obj, item) => {
-                           return (
-                              <div
-                                 key={item}
-                                 title={obj.data.transactionId}
-                                 className="flex gap-3 items-center justify-between border-b border-[var(--primary-color)] ml-[2%] pl-[2%] pr-[5%] py-4 rounded-lg"
-                              >
-                                 <div className="flex gap-8 items-center">
-                                    <span className="font-bold text-xl">
-                                       {obj.data.createdAt.split("T")[0]}
-                                    </span>
-                                    <CiExport
-                                       size={25}
-                                       className="hover:text-green-500 cursor-pointer"
-                                       onClick={() => {
-                                          if (!obj.data.createdAt[0]) return;
-                                          // download(obj.data.data);
-                                       }}
-                                    />
-                                 </div>
+                        {data.extract
+                           // .filter((val, i, arr) => {
+                           //    const id = val.data.externalId;
+                           //    console.log(id);
 
-                                 <div className="flex gap-3 items-center">
-                                    <span
-                                       className={`flex rounded-full p-1 bg-${
-                                          parseInt(obj.data.amount) < 0
-                                             ? "red"
-                                             : "green"
-                                       }-500`}
-                                    ></span>
+                           //    if (id) {
+                           //       const externalID = id.split("/")[0];
+                           //       const id_user = localStorage.getItem("id");
+
+                           //       return externalID == id_user;
+                           //    }
+                           // })
+                           .map((obj, item) => {
+                              return (
+                                 <div
+                                    key={item}
+                                    title={obj.data.transactionId}
+                                    className={`flex gap-3 items-center justify-between border-b  border-[var(--primary-color)] ml-[2%] pl-[2%] pr-[5%] py-4 rounded-lg `}
+                                 >
+                                    <div className={`flex items-center gap-3`}>
+                                       <span
+                                          className={`flex rounded-full h-[8px] w-[8px] bg-${
+                                             obj.data.type === "DEBIT"
+                                                ? "red"
+                                                : "green"
+                                          }-500`}
+                                       ></span>
+                                       <div className="flex gap-8  items-center ">
+                                          <span className="font-bold text-xl">
+                                             {obj.data.createdAt.split("T")[0]}
+                                          </span>
+                                          {/* <CiExport
+                                             size={25}
+                                             className="hover:text-green-500 cursor-pointer"
+                                             onClick={() => {
+                                                if (!obj.data) return;
+                                                // download(obj.data);
+                                             }}
+                                          /> */}
+                                       </div>
+                                    </div>
+                                    <div className="flex w-[340px] gap-3 items-center max-[950px]:hidden">
+                                       <span className="">
+                                          {obj.data.name
+                                             ? obj.data.name
+                                             : "Transação "}
+                                       </span>
+                                    </div>
+
                                     <span>
-                                       {obj.data.name
-                                          ? obj.data.name
-                                          : "Transação "}
+                                       {isHidden
+                                          ? "R$ ********"
+                                          : `R$ ${parseFloat(
+                                               obj.data.amount
+                                            ).toFixed(2)}`}
                                     </span>
                                  </div>
-
-                                 <span>
-                                    {isHidden
-                                       ? "R$ ********"
-                                       : `R$ ${obj.data.amount}`}
-                                 </span>
-                              </div>
-                           );
-                        })}
+                              );
+                           })}
                      </div>
                   </div>
                ) : (

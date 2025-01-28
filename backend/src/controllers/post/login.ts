@@ -43,6 +43,15 @@ async function login(req: UserRequest, res: Response) {
       return res.status(200).json({
          status: "isLogged",
          "x-access-token": token,
+         personData: {
+            user: data[0].user,
+            email: data[0].email,
+            id_logins: data[0].id_logins,
+            role: data[0].role,
+            valor: data[0].valor,
+            cpfCnpj: data[0].cpfCnpj,
+            nome: data[0].nome,
+         },
       });
    } catch (err: any) {
       console.log(err);

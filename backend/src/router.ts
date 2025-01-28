@@ -19,8 +19,13 @@ router.get("/", vanilla);
 router.post("/login", login);
 
 router.get("/pix/consultar/:key", JWTverify, consultarChavePix);
-router.post("/pix/transfer", JWTverify, transferirPix);
-router.post("/pix/emv/transfer", JWTverify, transferirPixCopiaCola);
+router.post("/pix/transfer", JWTverify, verifySaldo, transferirPix);
+router.post(
+   "/pix/emv/transfer",
+   JWTverify,
+   verifySaldo,
+   transferirPixCopiaCola
+);
 router.post("/pix/cobrar", JWTverify, CreateQRcode);
 
 router.get("/extrato/:page", JWTverify, extrato);

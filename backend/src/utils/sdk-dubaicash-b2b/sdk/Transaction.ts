@@ -15,19 +15,23 @@ export class Transactions {
 
    async pix(
       body: CreateTransfer,
+      id: number,
       cpfCnpj?: string
    ): Promise<{ status: number; data: any }> {
       const header = await this.sign.header();
       const url: string = process.env.URL_API as string;
+      const randomNumber = gerarNumeroAleatorio();
+      const externalId = id + "/" + randomNumber;
       const document = cpfCnpj;
       try {
          const result = await axios.post(
             url + "/v1/customers/pix/withdraw",
             {
+               externalId: externalId,
                key: body.key,
                documentNumber: document || "",
                amount: body.amount,
-               memo: "Transferência PIX",
+               memo: "cashout",
             },
             header
          );
@@ -96,14 +100,13 @@ export class Transactions {
 
    async CreateQR(
       body: CreateQR,
-      id?: number,
-      cpfCnpj?: string
+      id?: number
    ): Promise<{ status: number; data: any }> {
       const header = await this.sign.header();
       const url: string = process.env.URL_API as string;
       const randomNumber = gerarNumeroAleatorio();
       const externalId = id + "/" + randomNumber;
-      const document = cpfCnpj;
+      const document = body.cpf;
 
       try {
          const result = await axios.post(
@@ -111,8 +114,10 @@ export class Transactions {
             {
                externalId: externalId,
                amount: body.amount,
-               document: "85857758580",
-               name: "Gabriel Pereira Firmo de Aguiar",
+               document: document,
+               identification: "Recarga via QRCode",
+               description: externalId,
+               name: body.nome,
                expire: 3600,
             },
             header

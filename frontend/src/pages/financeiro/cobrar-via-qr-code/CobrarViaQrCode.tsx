@@ -27,6 +27,7 @@ function CobrarViaQrCode() {
    $(() => {
       $(".MONEY").mask("000.000,00", { reverse: true });
 
+      $(".CPF").mask("000.000.000-00");
       $(".DATA").mask("00/00/0000");
    });
    const headers = {
@@ -47,7 +48,7 @@ function CobrarViaQrCode() {
          <div className="gap-10 flex-col w-full h-screen overflow-y-auto flex items-center  bg-[var(--background-primary-color)] max-[1000px]:bg-[var(--background-secound-color)]">
             <dialog
                open={modalVisible}
-               className="backdrop-blur-xl	 bg-transparent h-full w-full absolute top-0"
+               className="backdrop-blur-xl bg-transparent h-full w-full absolute top-0"
             >
                <div className="h-full w-full bg-transparent flex items-center justify-center ">
                   <form
@@ -115,6 +116,13 @@ function CobrarViaQrCode() {
                                  e.preventDefault();
                                  const amount =
                                     ($("#valor").val() as string) || "0";
+                                 const cpf =
+                                    ($("#cpfDevedor").val() as string).replace(
+                                       /[^\d]/g,
+                                       ""
+                                    ) || "00000000000";
+                                 const nome =
+                                    ($("#nomeDevedor").val() as string) || "";
                                  const amount_number = BRLtoNumber(amount);
 
                                  if (isLoading) return;
@@ -125,6 +133,8 @@ function CobrarViaQrCode() {
                                        "http://localhost:2311/pix/cobrar",
                                        {
                                           amount: amount_number,
+                                          cpf: cpf,
+                                          nome: nome,
                                        },
                                        headers
                                     )
@@ -156,6 +166,34 @@ function CobrarViaQrCode() {
                            >
                               <div className="flex flex-col gap-10 w-full max-[1000px]:flex-col">
                                  <div className="grid gap-5 w-full">
+                                    <div>
+                                       <label
+                                          htmlFor="nomeDevedor"
+                                          className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] "
+                                       >
+                                          Nome do devedor
+                                       </label>
+                                       <input
+                                          type="text"
+                                          id="nomeDevedor"
+                                          placeholder="Gabriel Firmo"
+                                          className=" bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] block w-full p-2.5 max-[1000px]:bg-transparent max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)]"
+                                       />
+                                    </div>
+                                    <div>
+                                       <label
+                                          htmlFor="cpfDevedor"
+                                          className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] "
+                                       >
+                                          CPF do devedor
+                                       </label>
+                                       <input
+                                          type="text"
+                                          id="cpfDevedor"
+                                          placeholder="000.000.000-00"
+                                          className="CPF bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] block w-full p-2.5 max-[1000px]:bg-transparent max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)]"
+                                       />
+                                    </div>
                                     <div>
                                        <label
                                           htmlFor="valor"

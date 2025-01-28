@@ -139,7 +139,7 @@ const TransferirPix: React.FC = () => {
                            }}
                         />
                      </div>
-                     <div className="flex  w-full max-[1000px]:items-center min-[1000px]:px-40 mt-20 flex-col gap-4">
+                     <div className="flex  w-full max-[1000px]:items-center max-[1000px]:px-20 min-[1000px]:px-40 mt-20 flex-col gap-4">
                         <div className="flex-col gap-4 flex">
                            <div className="text-gray-300 flex items-center gap-4">
                               <BiKey size={25} />
@@ -199,7 +199,10 @@ const TransferirPix: React.FC = () => {
                                  })
                                  .catch((err) => {
                                     console.error(err);
-
+                                    if (err.response.status === 400)
+                                       return toast.warn(
+                                          err.response.data.message
+                                       );
                                     toast.error(
                                        "Ocorreu um erro na transferência"
                                     );

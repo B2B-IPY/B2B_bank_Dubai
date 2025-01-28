@@ -31,11 +31,16 @@ function LoginPage() {
          .then((res) => {
             localStorage.setItem("user", user);
             localStorage.setItem("x-access-token", res.data["x-access-token"]);
+            localStorage.setItem("email", res.data.personData.email);
+            localStorage.setItem("id", res.data.personData.id_logins);
+            localStorage.setItem("nome", res.data.personData.nome);
+            localStorage.setItem("cpfCnpj", res.data.personData.cpfCnpj);
+
             userInfos.dispatch(
                setUserInfos({
                   username: user,
                   role: res.data.role,
-                  saldo: res.data.saldo,
+                  saldo: res.data.valor,
                })
             );
             navigate("/");
