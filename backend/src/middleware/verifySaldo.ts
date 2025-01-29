@@ -11,23 +11,29 @@ export const verifySaldo = async (
    const user = req.user;
    const transactionAmount = req.body.amount;
 
-   console.log(user, transactionAmount);
-
    if (!user || !transactionAmount) {
       return res.status(400).json({
          message: "ID do usuário e valor da transação são obrigatórios",
       });
    }
-   const conn = mysql.createConnection(config);
 
    try {
+      const conn = mysql.createConnection(config);
       const auth = new SDK_DubaiCash_B2B();
       const data = await auth.sign.getLoginInfoByUser(user, conn);
-
+      conn.end();
       if (!data[0])
          return res.status(404).json({ status: "usuario nao encontrado" });
 
-      if (data[0].valor < transactionAmount) {
+      const tarifa =
+         data[0].cashout_fixo +
+         (data[0].cashout_porcent * transactionAmount) / 100;
+
+      const tarifaFinal = tarifa + 0.15;
+      const valorFinal = transactionAmount + tarifaFinal;
+      console.log(valorFinal);
+
+      if (data[0].valor <= valorFinal) {
          return res.status(400).json({ message: "Saldo insuficiente" });
       }
 

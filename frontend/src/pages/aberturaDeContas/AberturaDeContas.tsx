@@ -16,13 +16,7 @@ interface Request {
    user: string;
    nome: string;
    cpfCnpj: string;
-   tel: string;
    email: string;
-   selfie: File | null;
-   doc_frente: File | null;
-   doc_verso: File | null;
-   cartao_cnpj: File | null;
-   contrato_social: File | null;
    taxas_representante: Taxas_representante[];
 }
 
@@ -52,13 +46,7 @@ function AberturaDeContas() {
       user: "",
       nome: "",
       cpfCnpj: "",
-      tel: "",
       email: "",
-      selfie: null,
-      doc_frente: null,
-      doc_verso: null,
-      cartao_cnpj: null,
-      contrato_social: null,
       taxas_representante: [],
    });
    useEffect(() => {
@@ -113,22 +101,21 @@ function AberturaDeContas() {
          <div className="grid min-[1000px]:grid-cols-2 w-full h-screen overflow-y-auto ">
             {modalConfirm && (
                <dialog className="z-20 bg-[var(--background-secound-color)] backdrop-blur-xl flex justify-center items-center lg:bg-transparent h-full w-full absolute py-20 top-0 overflow-y-auto">
-                  <div className="flex flex-col max-w-4xl   items-center justify-center bg-[var(--background-secound-color)] lg:border-2 border-[var(--border-color2)]">
-                     <div className="flex w-full text-[var(--title-primary-color)] items-center justify-between px-4 py-6 border-b border-[var(--border-color2)]">
+                  <div className="flex flex-col max-w-4xl   items-center justify-center bg-[var(--background-secound-color)] lg:border-2 border-[var(--border-color2)]  max-[1000px]:border">
+                     <div className="flex w-full text-[var(--title-primary-color)] items-center justify-between px-4 py-6 border-b border-[var(--border-color2)] ">
                         <span className="text-[18px] font-semibold">
-                           Conta em analise
+                           Conta criada
                         </span>
                      </div>
 
                      <div className="w-full flex flex-col items-center ">
                         <div className="w-[90%] flex flex-col py-4 gap-4 border-b-2 border-[var(--border-color)] ">
                            <span className=" text-[var(--title-primary-color)] text-[18px] font-semibold">
-                              Sua conta foi enviada para analise
+                              Sua conta foi criada com sucesso
                            </span>
                            <span className="text-[15px] text-[var(--title-primary-color)]">
-                              Se você tiver qualquer dúvida ou precisar de mais
-                              informações, entre em contato com a nossa equipe
-                              de suporte.
+                              Sua senha de acesso foi enviada para o email{" "}
+                              {request.email}
                            </span>
 
                            <div className="flex">
@@ -160,353 +147,6 @@ function AberturaDeContas() {
                </dialog>
             )}
 
-            {modalVisible && (
-               <dialog className="max-[1000px]:bg-[var(--background-secound-color)] min-[1000px]:backdrop-blur-xl flex justify-center bg-transparent h-full w-full absolute z-20 lg:py-20 top-0 overflow-y-auto">
-                  <div className="flex  flex-col  max-[1000px]:h-full overflow-y-auto  bg-[var(--background-secound-color)] min-[1000px]:border-2 border-[var(--border-color2)]">
-                     <div className="flex w-full text-[var(--title-primary-color)] items-center justify-between px-4 py-6 border-b border-[var(--border-color2)]">
-                        <span className="text-[18px] font-semibold">
-                           Anexar Arquivos
-                        </span>
-                        <div
-                           className="cursor-pointer"
-                           onClick={() => {
-                              setModalVisible(false);
-                              setModalConfirm(false);
-                           }}
-                        >
-                           <MdClose className="text-[26px] " />
-                        </div>
-                     </div>
-
-                     {!modalConfirm ? (
-                        <form
-                           onSubmit={(e) => {
-                              e.preventDefault();
-                              const selfie = (
-                                 document.querySelector(
-                                    "#selfie"
-                                 ) as HTMLInputElement
-                              ).files;
-                              const doc_frente = (
-                                 document.querySelector(
-                                    "#doc_frente"
-                                 ) as HTMLInputElement
-                              ).files;
-                              const doc_verso = (
-                                 document.querySelector(
-                                    "#doc_verso"
-                                 ) as HTMLInputElement
-                              ).files;
-
-                              const contratoSocial = isChecked
-                                 ? (
-                                      document.querySelector(
-                                         "#contratoSocial"
-                                      ) as HTMLInputElement
-                                   ).files
-                                 : [];
-
-                              const cartaoCNPJ = isChecked
-                                 ? (
-                                      document.querySelector(
-                                         "#cartaoCNPJ"
-                                      ) as HTMLInputElement
-                                   ).files
-                                 : [];
-
-                              if (
-                                 !selfie![0] ||
-                                 !doc_frente![0] ||
-                                 !doc_verso![0]
-                              ) {
-                                 return toast.warn("Anexe Todas as imagens");
-                              }
-
-                              setRequest((prev) => {
-                                 return {
-                                    ...prev,
-                                    selfie: selfie![0],
-                                    doc_frente: doc_frente![0],
-                                    doc_verso: doc_verso![0],
-
-                                    contrato_social: isChecked
-                                       ? contratoSocial![0]
-                                       : null,
-                                    cartao_cnpj: isChecked
-                                       ? cartaoCNPJ![0]
-                                       : null,
-                                 };
-                              });
-
-                              setModalConfirm(true);
-                           }}
-                           className="w-full flex flex-col items-center"
-                        >
-                           {isChecked && (
-                              <>
-                                 <div className="w-[90%] flex flex-col py-4 gap-4  ">
-                                    <div className="flex flex-col gap-1">
-                                       <span className=" text-[var(--title-primary-color)] text-[18px] font-semibold">
-                                          Contrato Social
-                                          <b className="text-red-400 font-normal">
-                                             {" "}
-                                             *
-                                          </b>
-                                       </span>
-                                    </div>
-
-                                    <div className="flex">
-                                       <input
-                                          type="file"
-                                          required
-                                          id="contratoSocial"
-                                          accept="image/png, image/jpg, image/jpeg, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                          className=" text-[var(--white-color2)]  border-2 border-[var(--border-color2)] rounded-lg px-4 w py-2 w-full focus:border-[var(--active-color)] focus:border-2 bg-transparent"
-                                       />
-                                    </div>
-                                 </div>
-                                 <div className="w-[90%] flex flex-col py-4 gap-4  ">
-                                    <div className="flex flex-col gap-1">
-                                       <span className=" text-[var(--title-primary-color)] text-[18px] font-semibold">
-                                          Cartão CNPJ
-                                          <b className="text-red-400 font-normal">
-                                             *
-                                          </b>
-                                       </span>
-                                    </div>
-
-                                    <div className="flex">
-                                       <input
-                                          type="file"
-                                          required
-                                          id="cartaoCNPJ"
-                                          accept="image/png, image/jpg, image/jpeg, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                          className=" text-[var(--white-color2)]  border-2 border-[var(--border-color2)] rounded-lg px-4 w py-2 w-full focus:border-[var(--active-color)] focus:border-2 bg-transparent"
-                                       />
-                                    </div>
-                                 </div>
-                              </>
-                           )}
-                           <div className="w-[90%] flex flex-col py-4 gap-4  ">
-                              <div className="flex flex-col gap-1">
-                                 <span className=" text-[var(--title-primary-color)] text-[18px] font-semibold">
-                                    Selfie {isChecked && "Do Sócio"} Com
-                                    Documento{" "}
-                                    <b className="text-red-400 font-normal">
-                                       *
-                                    </b>
-                                 </span>
-                                 <span className=" text-[var(--title-primary-color)] opacity-80 text-sm ">
-                                    Aceitamos apenas RG ou CNH com emissão
-                                    inferior a 10 anos
-                                 </span>
-                              </div>
-
-                              <div className="flex">
-                                 <input
-                                    type="file"
-                                    id="selfie"
-                                    required
-                                    accept="image/png, image/jpg, image/jpeg"
-                                    className=" text-[var(--white-color2)]  border-2 border-[var(--border-color2)] rounded-lg px-4 w py-2 w-full focus:border-[var(--active-color)] focus:border-2 bg-transparent"
-                                 />
-                              </div>
-                           </div>
-                           <div className="w-[90%] flex flex-col py-4 gap-4  ">
-                              <div className="flex flex-col gap-1">
-                                 <span className=" text-[var(--title-primary-color)] text-[18px] font-semibold">
-                                    Documento {isChecked && "Do Sócio"} Frente{" "}
-                                    <b className="text-red-400 font-normal">
-                                       *
-                                    </b>
-                                 </span>
-                                 <span className=" text-[var(--title-primary-color)] opacity-80 text-sm ">
-                                    Aceitamos apenas RG ou CNH com emissão
-                                    inferior a 10 anos
-                                 </span>
-                              </div>
-                              <div className="flex">
-                                 <input
-                                    type="file"
-                                    required
-                                    id="doc_frente"
-                                    accept="image/png, image/jpg, image/jpeg"
-                                    className=" text-[var(--white-color2)]  border-2 border-[var(--border-color2)] rounded-lg px-4 w py-2 w-full focus:border-[var(--active-color)] focus:border-2 bg-transparent"
-                                 />
-                              </div>
-                           </div>
-                           <div className="w-[90%] flex flex-col py-4 gap-4 border-b ">
-                              <div className="flex flex-col gap-1">
-                                 <span className=" text-[var(--title-primary-color)] text-[18px] font-semibold">
-                                    Documento {isChecked && "Do Sócio"} Verso{" "}
-                                    <b className="text-red-400 font-normal">
-                                       *
-                                    </b>
-                                 </span>
-                                 <span className=" text-[var(--title-primary-color)] opacity-80 text-sm ">
-                                    Aceitamos apenas RG ou CNH com emissão
-                                    inferior a 10 anos
-                                 </span>
-                              </div>
-                              <div className="flex ">
-                                 <input
-                                    type="file"
-                                    id="doc_verso"
-                                    required
-                                    accept="image/png, image/jpg, image/jpeg"
-                                    className="w-full text-[var(--white-color2)]  border-2 border-[var(--border-color2)] rounded-lg px-4 w py-2  focus:border-[var(--active-color)] focus:border-2 bg-transparent"
-                                 />
-                              </div>
-
-                              <span className="text-[15px] text-[var(--title-primary-color)]">
-                                 Ao clicar em Continuar, você confirma que leu e
-                                 concordou com os{" "}
-                                 <a
-                                    href="/"
-                                    className="underline text-[#63b1ff]"
-                                 >
-                                    termos de adesão
-                                 </a>{" "}
-                                 desta abertura de conta.
-                              </span>
-                           </div>
-
-                           <div className="w-[90%] flex justify-end py-4 gap-4">
-                              <button
-                                 onClick={() => {
-                                    setModalVisible(false);
-                                 }}
-                                 className=" transition flex gap-2 items-center justify-center h-10 text-[var(--primary-color)] focus:outline-none hover:bg-[var(--primary-color)] hover:text-[var(--white-color2)]  font-medium rounded-lg text-sm w-[140px]  py-2 border-2 border-[var(--primary-color)]"
-                              >
-                                 Cancelar
-                              </button>
-                              <button className=" transition flex gap-2 items-center justify-center h-10 text-[var(--white-color2)]  focus:outline-none  font-medium rounded-lg text-sm w-[140px]  py-2 text-center bg-[var(--primary-color)] hover:bg-transparent hover:border-[var(--primary-color)] hover:border-2 hover:text-[var(--primary-color)]">
-                                 {!isLoading ? "Continuar" : "Carregando..."}
-                              </button>
-                           </div>
-                        </form>
-                     ) : (
-                        <div className="h-full w-full flex flex-col justify-between items-center ">
-                           <div className="w-[90%] flex flex-col py-4 gap-4  ">
-                              <span className=" text-[var(--title-primary-color)] text-[18px] font-semibold">
-                                 Arquivos Anexados com sucesso!
-                              </span>
-                              <span className="text-[15px] text-[var(--title-primary-color)]">
-                                 Revise com cuidado seus dados, alguns dados não
-                                 é possivel fazer a alteração posteriormente.{" "}
-                                 <br />
-                                 <br /> Após a solicitação de criação da conta
-                                 uma senha será enviada ao email cadastrado
-                              </span>
-
-                              <div className="flex">
-                                 <div
-                                    onClick={() => {
-                                       setModalConfirm(false);
-                                    }}
-                                    className="flex w-[full] gap-2 cursor-pointer items-center text-[#2c80ff]"
-                                 >
-                                    <IoMdArrowRoundBack /> Voltar
-                                 </div>
-                              </div>
-                           </div>
-                           <div className="border-t-2 border-[var(--border-color)] w-[90%] flex justify-end py-5 gap-4">
-                              <button
-                                 onClick={() => {
-                                    if (isLoading) return;
-                                    const regex = /[\s!@#$%^&*(),.?":{}|<>0-9]/;
-                                    if (regex.test(request.user))
-                                       return toast.warning(
-                                          "apenas letras são aceitas no usuario, sem espaços"
-                                       );
-                                    setIsLoading(true);
-
-                                    const formadata = new FormData();
-                                    formadata.append(
-                                       "cpfCnpj",
-                                       request.cpfCnpj
-                                    );
-                                    formadata.append("email", request.email);
-                                    formadata.append("nome", request.nome);
-                                    formadata.append("tel", request.tel);
-                                    formadata.append("user", request.user);
-
-                                    formadata.append("selfie", request.selfie!);
-                                    formadata.append(
-                                       "doc_frente",
-                                       request.doc_frente! || null
-                                    );
-                                    formadata.append(
-                                       "doc_verso",
-                                       request.doc_verso! || null
-                                    );
-                                    formadata.append(
-                                       "taxas_representante",
-                                       JSON.stringify(representantesList || [])
-                                    );
-                                    console.log(request.contrato_social);
-                                    console.log(request.cartao_cnpj);
-
-                                    formadata.append(
-                                       "contrato_social",
-                                       request.contrato_social! || null
-                                    );
-                                    formadata.append(
-                                       "cartao_cnpj",
-                                       request.cartao_cnpj! || null
-                                    );
-
-                                    axios
-                                       .post(
-                                          "http://localhost:2311/abertura-de-contas/solicitar",
-                                          formadata,
-                                          {
-                                             headers: {
-                                                "Content-Type":
-                                                   "multipart/form-data",
-                                             },
-                                          }
-                                       )
-                                       .then(() => {
-                                          toast.success(
-                                             "Conta Solicitada com sucesso!"
-                                          );
-                                          setModalConfirm(false);
-                                          setModalVisible(false);
-                                          setModalSuccess(true);
-                                       })
-                                       .catch((err) => {
-                                          console.error(err);
-                                          if (
-                                             err.response.status === 403 ||
-                                             err.response.status === 401
-                                          )
-                                             return toast.warn(
-                                                "Usuario sem permissão"
-                                             );
-                                          if (err.response.status === 409)
-                                             return toast.warn(
-                                                "Conta já cadastrado"
-                                             );
-                                          toast.error(
-                                             err.response.erro ||
-                                                "Erro ao cadastrar Conta"
-                                          );
-                                       })
-                                       .finally(() => {
-                                          setIsLoading(false);
-                                       });
-                                 }}
-                                 className=" transition flex gap-2 items-center justify-center h-10 text-[var(--white-color2)]  focus:outline-none  font-medium rounded-lg text-sm w-[140px]  py-2 text-center bg-[var(--primary-color)] hover:bg-transparent hover:border-[var(--primary-color)] hover:border-2 hover:text-[var(--primary-color)]"
-                              >
-                                 {isLoading ? "carregando..." : "Solicitar"}
-                              </button>
-                           </div>
-                        </div>
-                     )}
-                  </div>
-               </dialog>
-            )}
             <section className="max-[1000px]:hidden h-full w-full bg-cover bg-no-repeat  bg-[url('https://useargo.com/wp-content/uploads/2022/06/gestao-de-despesas-e-viagens-corporativas.jpg')]">
                <div className="w-full flex items-center justify-center backdrop-blur-sm h-full border-l-[80px] border-l-[var(--background-secound-color)] border-t-[0px] border-t-transparent border-b-[80px] rotate-180	 border-b-transparent">
                   <img
@@ -525,7 +165,51 @@ function AberturaDeContas() {
                            id="form"
                            onSubmit={(e) => {
                               e.preventDefault();
-                              return setModalVisible(true);
+                              if (isLoading) return;
+                              const regex = /[\s!@#$%^&*(),.?":{}|<>0-9]/;
+                              if (regex.test(request.user))
+                                 return toast.warning(
+                                    "apenas letras são aceitas no usuario, sem espaços"
+                                 );
+                              setIsLoading(true);
+
+                              axios
+                                 .post(
+                                    "http://localhost:2311/subcontas/criar",
+                                    {
+                                       user: request.user,
+                                       name: request.nome,
+                                       email: request.email,
+                                       cpfCnpj: request.cpfCnpj,
+                                       taxas_representante:
+                                          request.taxas_representante,
+                                    }
+                                 )
+                                 .then(() => {
+                                    toast.success(
+                                       "Conta Solicitada com sucesso!"
+                                    );
+                                    setModalConfirm(true);
+                                 })
+                                 .catch((err) => {
+                                    console.error(err);
+                                    if (
+                                       err.response.status === 403 ||
+                                       err.response.status === 401
+                                    )
+                                       return toast.warn(
+                                          "Usuario sem permissão"
+                                       );
+                                    if (err.response.status === 409)
+                                       return toast.warn("Conta já cadastrado");
+                                    toast.error(
+                                       err.response.erro ||
+                                          "Erro ao cadastrar Conta"
+                                    );
+                                 })
+                                 .finally(() => {
+                                    setIsLoading(false);
+                                 });
                            }}
                         >
                            <h1 className="text-xl font-bold leading-tight tracking-widest   text-gray-200 md:text-2xl">
@@ -585,7 +269,7 @@ function AberturaDeContas() {
                                        htmlFor="nome"
                                        className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] "
                                     >
-                                       Nome
+                                       {isChecked ? "Razão Social" : "Nome"}
                                     </label>
                                     <input
                                        onInput={(e) => {
@@ -600,7 +284,11 @@ function AberturaDeContas() {
                                        type="text"
                                        id="nome"
                                        className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] block w-full p-2.5 max-[1000px]:bg-transparent max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)]"
-                                       placeholder="gustavo"
+                                       placeholder={
+                                          isChecked
+                                             ? "Fantasia Tech Serviços LTDA"
+                                             : "Gustavo"
+                                       }
                                        required
                                     />
                                  </div>
@@ -668,31 +356,6 @@ function AberturaDeContas() {
                                              ? "00.000.000/0000-00"
                                              : "000.000.000-00"
                                        }
-                                       required
-                                    />
-                                 </div>
-
-                                 <div>
-                                    <label
-                                       htmlFor="tel"
-                                       className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] "
-                                    >
-                                       Telefone
-                                    </label>
-                                    <input
-                                       onInput={(e) => {
-                                          const value = e.currentTarget.value;
-                                          setRequest((prev) => {
-                                             return {
-                                                ...prev,
-                                                tel: value,
-                                             };
-                                          });
-                                       }}
-                                       type="tel"
-                                       id="tel"
-                                       className="TEL bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] block w-full p-2.5 max-[1000px]:bg-transparent max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)]"
-                                       placeholder="(77) 99192-2123"
                                        required
                                     />
                                  </div>

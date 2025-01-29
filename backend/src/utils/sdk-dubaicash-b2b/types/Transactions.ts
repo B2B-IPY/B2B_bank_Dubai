@@ -35,3 +35,22 @@ export const CreateQRZod = z.object({
    cpf: z.string({ message: "cpfCnpj inválido" }),
    nome: z.string({ message: "nome inválido" }),
 });
+
+export interface Taxas {
+   bank: bank;
+}
+
+interface bank {
+   cashin: { fixo: string; porcentagem: string };
+   cashout: { fixo: string; porcentagem: string };
+}
+
+export interface taxaRepresentante {
+   id: number;
+   user: string;
+   user_id: string;
+   uuid: number;
+   taxas: Taxas;
+}
+
+// [{uuid: 87517671,id: 1,user: "adm",user_id: "1",taxas: {bank: {cashin: { fixo: "1", porcentagem: "2" },cashout: { fixo: "1", porcentagem: "2" }}}}]

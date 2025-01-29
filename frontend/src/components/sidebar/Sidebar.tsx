@@ -111,7 +111,7 @@ function Sidebar(props: Props) {
                            onClick={(e: MouseEvent<HTMLDivElement>) => {
                               const box = e.currentTarget
                                  .parentNode as HTMLElement;
-                              box.classList.toggle(`h-[170px]`);
+                              box.classList.toggle(`h-[130px]`);
                            }}
                         >
                            <MdAttachMoney size={24} />
@@ -139,7 +139,7 @@ function Sidebar(props: Props) {
                            >
                               Transferir PIX
                            </NavLink>
-                           <NavLink
+                           {/* <NavLink
                               to="/financeiro/transferencia/pix-copiaCola"
                               className={({ isActive }) =>
                                  isActive
@@ -148,7 +148,7 @@ function Sidebar(props: Props) {
                               }
                            >
                               Pix copia e cola
-                           </NavLink>
+                           </NavLink> */}
                         </div>
                      </div>
                   </li>

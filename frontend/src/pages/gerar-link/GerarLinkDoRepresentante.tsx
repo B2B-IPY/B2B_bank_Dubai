@@ -14,63 +14,16 @@ import { codificarPayload } from "../../functions/payload";
 import { Taxas_representante, Taxas } from "../../interfaces/taxas";
 
 interface Representantes {
-   id: number;
+   id_logins: number;
    user: string;
    user_id: string;
-   walletId: string;
 }
 
 function GerarLinkDoRepresentante() {
    const taxas: Taxas = {
       bank: {
-         PIX: {
-            PAYMENT_RECEIVED: {
-               fixo: "0",
-               porcentagem: "2",
-            },
-            TRANSFER_DONE: {
-               fixo: "1.99",
-               porcentagem: "0",
-            },
-         },
-         bill: {
-            BILL_PAID: {
-               fixo: "2",
-               porcentagem: "0",
-            },
-            BILL_CREATED: {
-               fixo: "1",
-               porcentagem: "0",
-            },
-            BILL_APPROVED: {
-               fixo: "1",
-               porcentagem: "0",
-            },
-         },
-         mobilePhoneRecharge: {
-            PHONE_RECHARGE_CONFIRMED: {
-               fixo: "1",
-               porcentagem: "0",
-            },
-         },
-         BANK_ACCOUNT: {
-            PAYMENT_RECEIVED: {
-               fixo: "5",
-               porcentagem: "0",
-            },
-            TRANSFER_DONE: {
-               fixo: "5",
-               porcentagem: "0",
-            },
-         },
-      },
-      sistema: {
-         mensalidade: {
-            fixo: "49.99",
-         },
-         criar_conta: {
-            fixo: "19.99",
-         },
+         cashin: { fixo: "0", porcentagem: "0" },
+         cashout: { fixo: "0", porcentagem: "0" },
       },
    };
 
@@ -116,7 +69,6 @@ function GerarLinkDoRepresentante() {
          .get("http://localhost:2311/representantes", headers)
          .then(({ data }) => {
             console.log(data);
-
             setRepresentantes(data);
          })
          .catch((error) => {
@@ -189,7 +141,7 @@ function GerarLinkDoRepresentante() {
                                                 ),
                                                 id: id,
                                                 user: user,
-                                                user_id: user_id,
+                                                user_id: id.toString(),
                                                 taxas: taxas,
                                              },
                                           ];
@@ -202,7 +154,7 @@ function GerarLinkDoRepresentante() {
                                           <option
                                              key={i}
                                              value={
-                                                representante.id +
+                                                representante.id_logins +
                                                 "/" +
                                                 representante.user +
                                                 "/" +
@@ -270,8 +222,8 @@ function GerarLinkDoRepresentante() {
                                           {representante.user}
                                        </h2>
                                     </div>
-                                    <div className="lg:grid grid-cols-3 ">
-                                       <div className="flex flex-col items-center     w-full ">
+                                    <div className="lg:grid grid-cols-2 pb-10">
+                                       <div className="flex flex-col items-center w-full ">
                                           <div className="  rounded-lg shadow  md:mt-0 xl:p-0 w-full h-full">
                                              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                                                 <h3 className="text-xl font-bold leading-tight tracking-tight text-[var(--title-primary-color)] md:text-2xl">
@@ -296,8 +248,7 @@ function GerarLinkDoRepresentante() {
                                                                            representante
                                                                               .taxas
                                                                               .bank
-                                                                              .PIX
-                                                                              .PAYMENT_RECEIVED
+                                                                              .cashin
                                                                               .fixo
                                                                         )
                                                                      )}
@@ -328,173 +279,15 @@ function GerarLinkDoRepresentante() {
                                                                                                 ...item
                                                                                                    .taxas
                                                                                                    .bank,
-                                                                                                PIX: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .PIX,
-                                                                                                   PAYMENT_RECEIVED:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .PIX
-                                                                                                            .PAYMENT_RECEIVED,
-                                                                                                         fixo: BRLtoNumber(
-                                                                                                            value
-                                                                                                         ).toString(),
-                                                                                                      },
-                                                                                                },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="MONEY flex  w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                               </div>
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={
-                                                                        representante
-                                                                           .taxas
-                                                                           .bank
-                                                                           .PIX
-                                                                           .PAYMENT_RECEIVED
-                                                                           .porcentagem
-                                                                     }
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                PIX: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .PIX,
-                                                                                                   PAYMENT_RECEIVED:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .PIX
-                                                                                                            .PAYMENT_RECEIVED,
-                                                                                                         porcentagem:
-                                                                                                            value,
-                                                                                                      },
-                                                                                                },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="PORCENTAGEM flex text-end w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                                  <span>%</span>
-                                                               </div>
-                                                            </div>
-                                                         </div>
-                                                         <div>
-                                                            <label className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] ">
-                                                               TED
-                                                            </label>
-                                                            <div className="flex gap-3">
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <span>
-                                                                     R$
-                                                                  </span>
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={formatarNumeroParaBRL(
-                                                                        parseFloat(
-                                                                           representante
-                                                                              .taxas
-                                                                              .bank
-                                                                              .BANK_ACCOUNT
-                                                                              .PAYMENT_RECEIVED
-                                                                              .fixo
-                                                                        )
-                                                                     )}
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                BANK_ACCOUNT:
+                                                                                                cashin:
                                                                                                    {
                                                                                                       ...item
                                                                                                          .taxas
                                                                                                          .bank
-                                                                                                         .BANK_ACCOUNT,
-                                                                                                      PAYMENT_RECEIVED:
-                                                                                                         {
-                                                                                                            ...item
-                                                                                                               .taxas
-                                                                                                               .bank
-                                                                                                               .BANK_ACCOUNT
-                                                                                                               .PAYMENT_RECEIVED,
-                                                                                                            fixo: BRLtoNumber(
-                                                                                                               value
-                                                                                                            ).toString(),
-                                                                                                         },
+                                                                                                         .cashin,
+                                                                                                      fixo: BRLtoNumber(
+                                                                                                         value
+                                                                                                      ).toString(),
                                                                                                    },
                                                                                              },
                                                                                           },
@@ -517,8 +310,7 @@ function GerarLinkDoRepresentante() {
                                                                         representante
                                                                            .taxas
                                                                            .bank
-                                                                           .BANK_ACCOUNT
-                                                                           .PAYMENT_RECEIVED
+                                                                           .cashin
                                                                            .porcentagem
                                                                      }
                                                                      onInput={(
@@ -548,323 +340,15 @@ function GerarLinkDoRepresentante() {
                                                                                                 ...item
                                                                                                    .taxas
                                                                                                    .bank,
-                                                                                                BANK_ACCOUNT:
+                                                                                                cashin:
                                                                                                    {
                                                                                                       ...item
                                                                                                          .taxas
                                                                                                          .bank
-                                                                                                         .BANK_ACCOUNT,
-                                                                                                      PAYMENT_RECEIVED:
-                                                                                                         {
-                                                                                                            ...item
-                                                                                                               .taxas
-                                                                                                               .bank
-                                                                                                               .BANK_ACCOUNT
-                                                                                                               .PAYMENT_RECEIVED,
-                                                                                                            porcentagem:
-                                                                                                               value,
-                                                                                                         },
+                                                                                                         .cashin,
+                                                                                                      porcentagem:
+                                                                                                         value,
                                                                                                    },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="PORCENTAGEM flex text-end w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                                  <span>%</span>
-                                                               </div>
-                                                            </div>
-                                                         </div>
-                                                         <div>
-                                                            <label className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] ">
-                                                               Gerar Boleto
-                                                            </label>
-                                                            <div className="flex gap-3">
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <span>
-                                                                     R$
-                                                                  </span>
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={formatarNumeroParaBRL(
-                                                                        parseFloat(
-                                                                           representante
-                                                                              .taxas
-                                                                              .bank
-                                                                              .bill
-                                                                              .BILL_CREATED
-                                                                              .fixo
-                                                                        )
-                                                                     )}
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                bill: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .bill,
-                                                                                                   BILL_CREATED:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .bill
-                                                                                                            .BILL_CREATED,
-                                                                                                         fixo: BRLtoNumber(
-                                                                                                            value
-                                                                                                         ).toString(),
-                                                                                                      },
-                                                                                                },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="MONEY flex  w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                               </div>
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={
-                                                                        representante
-                                                                           .taxas
-                                                                           .bank
-                                                                           .bill
-                                                                           .BILL_CREATED
-                                                                           .porcentagem
-                                                                     }
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                bill: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .bill,
-                                                                                                   BILL_CREATED:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .bill
-                                                                                                            .BILL_CREATED,
-                                                                                                         porcentagem:
-                                                                                                            value,
-                                                                                                      },
-                                                                                                },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="PORCENTAGEM flex text-end w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                                  <span>%</span>
-                                                               </div>
-                                                            </div>
-                                                         </div>
-                                                         <div>
-                                                            <label className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] ">
-                                                               Liquidar Boleto
-                                                            </label>
-                                                            <div className="flex gap-3">
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <span>
-                                                                     R$
-                                                                  </span>
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={formatarNumeroParaBRL(
-                                                                        parseFloat(
-                                                                           representante
-                                                                              .taxas
-                                                                              .bank
-                                                                              .bill
-                                                                              .BILL_APPROVED
-                                                                              .fixo
-                                                                        )
-                                                                     )}
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                bill: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .bill,
-                                                                                                   BILL_APPROVED:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .bill
-                                                                                                            .BILL_APPROVED,
-                                                                                                         fixo: BRLtoNumber(
-                                                                                                            value
-                                                                                                         ).toString(),
-                                                                                                      },
-                                                                                                },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="MONEY flex  w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                               </div>
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={
-                                                                        representante
-                                                                           .taxas
-                                                                           .bank
-                                                                           .bill
-                                                                           .BILL_APPROVED
-                                                                           .porcentagem
-                                                                     }
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                bill: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .bill,
-                                                                                                   BILL_APPROVED:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .bill
-                                                                                                            .BILL_APPROVED,
-                                                                                                         porcentagem:
-                                                                                                            value,
-                                                                                                      },
-                                                                                                },
                                                                                              },
                                                                                           },
                                                                                        };
@@ -914,8 +398,7 @@ function GerarLinkDoRepresentante() {
                                                                            representante
                                                                               .taxas
                                                                               .bank
-                                                                              .PIX
-                                                                              .TRANSFER_DONE
+                                                                              .cashout
                                                                               .fixo
                                                                         )
                                                                      )}
@@ -946,173 +429,15 @@ function GerarLinkDoRepresentante() {
                                                                                                 ...item
                                                                                                    .taxas
                                                                                                    .bank,
-                                                                                                PIX: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .PIX,
-                                                                                                   TRANSFER_DONE:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .PIX
-                                                                                                            .TRANSFER_DONE,
-                                                                                                         fixo: BRLtoNumber(
-                                                                                                            value
-                                                                                                         ).toString(),
-                                                                                                      },
-                                                                                                },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="MONEY flex  w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                               </div>
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={
-                                                                        representante
-                                                                           .taxas
-                                                                           .bank
-                                                                           .PIX
-                                                                           .TRANSFER_DONE
-                                                                           .porcentagem
-                                                                     }
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                PIX: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .PIX,
-                                                                                                   TRANSFER_DONE:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .PIX
-                                                                                                            .TRANSFER_DONE,
-                                                                                                         porcentagem:
-                                                                                                            value,
-                                                                                                      },
-                                                                                                },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="PORCENTAGEM flex text-end w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                                  <span>%</span>
-                                                               </div>
-                                                            </div>
-                                                         </div>
-                                                         <div>
-                                                            <label className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] ">
-                                                               TED
-                                                            </label>
-                                                            <div className="flex gap-3">
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <span>
-                                                                     R$
-                                                                  </span>
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={formatarNumeroParaBRL(
-                                                                        parseFloat(
-                                                                           representante
-                                                                              .taxas
-                                                                              .bank
-                                                                              .BANK_ACCOUNT
-                                                                              .TRANSFER_DONE
-                                                                              .fixo
-                                                                        )
-                                                                     )}
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                BANK_ACCOUNT:
+                                                                                                cashout:
                                                                                                    {
                                                                                                       ...item
                                                                                                          .taxas
                                                                                                          .bank
-                                                                                                         .BANK_ACCOUNT,
-                                                                                                      TRANSFER_DONE:
-                                                                                                         {
-                                                                                                            ...item
-                                                                                                               .taxas
-                                                                                                               .bank
-                                                                                                               .BANK_ACCOUNT
-                                                                                                               .TRANSFER_DONE,
-                                                                                                            fixo: BRLtoNumber(
-                                                                                                               value
-                                                                                                            ).toString(),
-                                                                                                         },
+                                                                                                         .cashout,
+                                                                                                      fixo: BRLtoNumber(
+                                                                                                         value
+                                                                                                      ).toString(),
                                                                                                    },
                                                                                              },
                                                                                           },
@@ -1135,8 +460,7 @@ function GerarLinkDoRepresentante() {
                                                                         representante
                                                                            .taxas
                                                                            .bank
-                                                                           .BANK_ACCOUNT
-                                                                           .TRANSFER_DONE
+                                                                           .cashin
                                                                            .porcentagem
                                                                      }
                                                                      onInput={(
@@ -1166,22 +490,16 @@ function GerarLinkDoRepresentante() {
                                                                                                 ...item
                                                                                                    .taxas
                                                                                                    .bank,
-                                                                                                BANK_ACCOUNT:
+                                                                                                cashout:
                                                                                                    {
                                                                                                       ...item
                                                                                                          .taxas
                                                                                                          .bank
-                                                                                                         .BANK_ACCOUNT,
-                                                                                                      TRANSFER_DONE:
-                                                                                                         {
-                                                                                                            ...item
-                                                                                                               .taxas
-                                                                                                               .bank
-                                                                                                               .BANK_ACCOUNT
-                                                                                                               .TRANSFER_DONE,
-                                                                                                            porcentagem:
-                                                                                                               value,
-                                                                                                         },
+                                                                                                         .cashout,
+                                                                                                      porcentagem:
+                                                                                                         BRLtoNumber(
+                                                                                                            value
+                                                                                                         ).toString(),
                                                                                                    },
                                                                                              },
                                                                                           },
@@ -1197,316 +515,6 @@ function GerarLinkDoRepresentante() {
                                                                      required
                                                                   />
                                                                   <span>%</span>
-                                                               </div>
-                                                            </div>
-                                                         </div>
-                                                         <div>
-                                                            <label className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] ">
-                                                               Pagamento De
-                                                               Boleto
-                                                            </label>
-                                                            <div className="flex gap-3">
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <span>
-                                                                     R$
-                                                                  </span>
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={formatarNumeroParaBRL(
-                                                                        parseFloat(
-                                                                           representante
-                                                                              .taxas
-                                                                              .bank
-                                                                              .bill
-                                                                              .BILL_PAID
-                                                                              .fixo
-                                                                        )
-                                                                     )}
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                bill: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .bill,
-                                                                                                   BILL_PAID:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .bill
-                                                                                                            .BILL_PAID,
-                                                                                                         fixo: BRLtoNumber(
-                                                                                                            value
-                                                                                                         ).toString(),
-                                                                                                      },
-                                                                                                },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="MONEY flex  w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                               </div>
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={
-                                                                        representante
-                                                                           .taxas
-                                                                           .bank
-                                                                           .bill
-                                                                           .BILL_PAID
-                                                                           .porcentagem
-                                                                     }
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             bank: {
-                                                                                                ...item
-                                                                                                   .taxas
-                                                                                                   .bank,
-                                                                                                bill: {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .bank
-                                                                                                      .bill,
-                                                                                                   BILL_PAID:
-                                                                                                      {
-                                                                                                         ...item
-                                                                                                            .taxas
-                                                                                                            .bank
-                                                                                                            .bill
-                                                                                                            .BILL_PAID,
-                                                                                                         porcentagem:
-                                                                                                            value,
-                                                                                                      },
-                                                                                                },
-                                                                                             },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="PORCENTAGEM flex text-end w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                                  <span>%</span>
-                                                               </div>
-                                                            </div>
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                </div>
-                                             </div>
-                                          </div>
-                                       </div>
-
-                                       <div className="flex flex-col items-center  w-full ">
-                                          <div className="  rounded-lg shadow  md:mt-0 xl:p-0 w-full h-full">
-                                             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                                                <h1 className="text-xl font-bold leading-tight tracking-tight text-[var(--title-primary-color)] md:text-2xl">
-                                                   Sistema
-                                                </h1>
-                                                <div className="space-y-4 md:space-y-6">
-                                                   <div className="flex flex-col gap-10 w-full max-[1000px]:flex-col">
-                                                      <div className="grid  gap-5 w-full">
-                                                         <div>
-                                                            <label className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] ">
-                                                               Mensalidade
-                                                            </label>
-                                                            <div className="flex gap-3">
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <span>
-                                                                     R$
-                                                                  </span>
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={formatarNumeroParaBRL(
-                                                                        parseFloat(
-                                                                           representante
-                                                                              .taxas
-                                                                              .sistema
-                                                                              .mensalidade
-                                                                              .fixo
-                                                                        )
-                                                                     )}
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             sistema:
-                                                                                                {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .sistema,
-                                                                                                   mensalidade:
-                                                                                                      {
-                                                                                                         fixo: BRLtoNumber(
-                                                                                                            value
-                                                                                                         ).toString(),
-                                                                                                      },
-                                                                                                },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="MONEY flex  w-full bg-transparent"
-                                                                     required
-                                                                  />
-                                                               </div>
-                                                            </div>
-                                                         </div>
-                                                         <div>
-                                                            <label
-                                                               htmlFor="criarConta_cashout_fixo"
-                                                               className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] "
-                                                            >
-                                                               Criar Conta
-                                                            </label>
-                                                            <div className="flex gap-3">
-                                                               <div className="bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] flex justify-between w-full p-2.5 max-[1000px]:bg-transparent  max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)] gap-2">
-                                                                  <span>
-                                                                     R$
-                                                                  </span>
-                                                                  <input
-                                                                     type="text"
-                                                                     defaultValue={formatarNumeroParaBRL(
-                                                                        parseFloat(
-                                                                           representante
-                                                                              .taxas
-                                                                              .sistema
-                                                                              .criar_conta
-                                                                              .fixo
-                                                                        )
-                                                                     )}
-                                                                     onInput={(
-                                                                        e
-                                                                     ) => {
-                                                                        const value =
-                                                                           e
-                                                                              .currentTarget
-                                                                              .value;
-                                                                        setTaxasRepresentante(
-                                                                           (
-                                                                              prev
-                                                                           ) => {
-                                                                              return prev.map(
-                                                                                 (
-                                                                                    item
-                                                                                 ) => {
-                                                                                    if (
-                                                                                       item.uuid ===
-                                                                                       representante.uuid
-                                                                                    ) {
-                                                                                       return {
-                                                                                          ...item,
-                                                                                          taxas: {
-                                                                                             ...item.taxas,
-                                                                                             sistema:
-                                                                                                {
-                                                                                                   ...item
-                                                                                                      .taxas
-                                                                                                      .sistema,
-                                                                                                   criar_conta:
-                                                                                                      {
-                                                                                                         fixo: BRLtoNumber(
-                                                                                                            value
-                                                                                                         ).toString(),
-                                                                                                      },
-                                                                                                },
-                                                                                          },
-                                                                                       };
-                                                                                    }
-                                                                                    return item;
-                                                                                 }
-                                                                              );
-                                                                           }
-                                                                        );
-                                                                     }}
-                                                                     className="MONEY flex  w-full bg-transparent"
-                                                                     required
-                                                                  />
                                                                </div>
                                                             </div>
                                                          </div>

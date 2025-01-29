@@ -68,10 +68,10 @@ const router = createBrowserRouter([
             path: "/financeiro/transferencia/qr-code",
             element: <CobrarViaQrCode />,
          },
-         {
-            path: "/financeiro/transferencia/pix-copiaCola",
-            element: <TransferirPixCopiaCola />,
-         },
+         // {
+         //    path: "/financeiro/transferencia/pix-copiaCola",
+         //    element: <TransferirPixCopiaCola />,
+         // },
 
          {
             path: "/viewer",

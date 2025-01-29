@@ -34,6 +34,7 @@ function LoginPage() {
             localStorage.setItem("email", res.data.personData.email);
             localStorage.setItem("id", res.data.personData.id_logins);
             localStorage.setItem("nome", res.data.personData.nome);
+            localStorage.setItem("role", res.data.personData.role);
             localStorage.setItem("cpfCnpj", res.data.personData.cpfCnpj);
 
             userInfos.dispatch(

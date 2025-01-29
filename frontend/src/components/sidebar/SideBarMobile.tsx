@@ -37,9 +37,6 @@ function SidebarMobile(props: Props) {
                   <li className="">
                      <NavLink
                         to="/"
-                        onClick={() => {
-                           toggleSideBar();
-                        }}
                         className={({ isActive }) =>
                            isActive
                               ? "text-[var(--title-primary-color)] flex gap-2 font-semibold py-2 pl-3 rounded-lg border-b-2 border-[var(--primary-color)] "
@@ -57,7 +54,7 @@ function SidebarMobile(props: Props) {
                            onClick={(e: MouseEvent<HTMLDivElement>) => {
                               const box = e.currentTarget
                                  .parentNode as HTMLElement;
-                              box.classList.toggle("h-[150px]");
+                              box.classList.toggle("h-[100px]");
                            }}
                         >
                            <BiListCheck size={28} />
@@ -65,9 +62,6 @@ function SidebarMobile(props: Props) {
                         </div>
                         <div className="border-gray-200 border-l rounded pl-4 ml-6 mt-3">
                            <NavLink
-                              onClick={() => {
-                                 toggleSideBar();
-                              }}
                               to="/financeiro/extrato/transacoes"
                               className={({ isActive }) =>
                                  isActive
@@ -76,19 +70,6 @@ function SidebarMobile(props: Props) {
                               }
                            >
                               Transações
-                           </NavLink>
-                           <NavLink
-                              onClick={() => {
-                                 toggleSideBar();
-                              }}
-                              to="/financeiro/boletos"
-                              className={({ isActive }) =>
-                                 isActive
-                                    ? "text-[var(--title-primary-color)] flex gap-2 font-semibold py-2 pl-3 rounded-lg border-b border-[var(--primary-color)] text-sm"
-                                    : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
-                              }
-                           >
-                              Boletos
                            </NavLink>
                         </div>
                      </div>
@@ -111,9 +92,6 @@ function SidebarMobile(props: Props) {
                            </div>
                            <div className="border-gray-200 border-l rounded pl-4 ml-6 mt-3">
                               <NavLink
-                                 onClick={() => {
-                                    toggleSideBar();
-                                 }}
                                  to="/gerar-link"
                                  className={({ isActive }) =>
                                     isActive
@@ -135,7 +113,7 @@ function SidebarMobile(props: Props) {
                            onClick={(e: MouseEvent<HTMLDivElement>) => {
                               const box = e.currentTarget
                                  .parentNode as HTMLElement;
-                              box.classList.toggle(`h-[240px]`);
+                              box.classList.toggle(`h-[130px]`);
                            }}
                         >
                            <MdAttachMoney size={24} />
@@ -143,9 +121,6 @@ function SidebarMobile(props: Props) {
                         </div>
                         <div className="border-gray-200 border-l rounded pl-4 ml-6 mt-3">
                            <NavLink
-                              onClick={() => {
-                                 toggleSideBar();
-                              }}
                               to="/financeiro/transferencia/qr-code"
                               className={({ isActive }) =>
                                  isActive
@@ -153,13 +128,10 @@ function SidebarMobile(props: Props) {
                                     : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
                               }
                            >
-                              QR code
+                              Gerar QR Code
                            </NavLink>
 
                            <NavLink
-                              onClick={() => {
-                                 toggleSideBar();
-                              }}
                               to="/financeiro/transferencia/pix"
                               className={({ isActive }) =>
                                  isActive
@@ -167,12 +139,9 @@ function SidebarMobile(props: Props) {
                                     : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
                               }
                            >
-                              Saque
+                              Transferir PIX
                            </NavLink>
-                           <NavLink
-                              onClick={() => {
-                                 toggleSideBar();
-                              }}
+                           {/* <NavLink
                               to="/financeiro/transferencia/pix-copiaCola"
                               className={({ isActive }) =>
                                  isActive
@@ -181,33 +150,7 @@ function SidebarMobile(props: Props) {
                               }
                            >
                               Pix copia e cola
-                           </NavLink>
-                           <NavLink
-                              onClick={() => {
-                                 toggleSideBar();
-                              }}
-                              to="/financeiro/pagamentos/boleto"
-                              className={({ isActive }) =>
-                                 isActive
-                                    ? "text-[var(--title-primary-color)] flex gap-2 font-semibold py-2 pl-3 rounded-lg border-b border-[var(--primary-color)] text-sm"
-                                    : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
-                              }
-                           >
-                              pgto boleto
-                           </NavLink>
-                           <NavLink
-                              onClick={() => {
-                                 toggleSideBar();
-                              }}
-                              to="/financeiro/gerar-boleto"
-                              className={({ isActive }) =>
-                                 isActive
-                                    ? "text-[var(--title-primary-color)] flex gap-2 font-semibold py-2 pl-3 rounded-lg border-b border-[var(--primary-color)] text-sm"
-                                    : "text-[var(--title-secound-color)] flex gap-2 font-semibold py-2 pl-3 text-sm hover:text-[var(--hover-text-color)] transition"
-                              }
-                           >
-                              Gerar boleto
-                           </NavLink>
+                           </NavLink> */}
                         </div>
                      </div>
                   </li>

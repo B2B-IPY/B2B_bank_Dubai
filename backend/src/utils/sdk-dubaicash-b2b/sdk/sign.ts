@@ -77,6 +77,24 @@ export class sign {
          throw error;
       }
    }
+   async verifyDocAndUser(
+      user: string,
+      doc: string,
+      connection: Connection
+   ): Promise<SubConta[]> {
+      try {
+         const data = await this.Query(
+            "SELECT * FROM logins WHERE user = ? OR cpfCnpj = ?",
+            [user, doc],
+            connection
+         );
+
+         return data;
+      } catch (error) {
+         throw error;
+      }
+   }
+
    async bcrypt(hashedPassword: string, password: string): Promise<boolean> {
       return await bcrypt.compare(password, hashedPassword);
    }
