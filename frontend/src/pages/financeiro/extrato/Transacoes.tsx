@@ -101,7 +101,7 @@ function Transacoes() {
       setIsLoading(true);
 
       axios
-         .get("http://localhost:2311/extrato/1", headers)
+         .get("https://api.binbank.com.br/extrato/1", headers)
          .then(({ data }) => {
             console.log(data);
 

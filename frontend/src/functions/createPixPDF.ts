@@ -29,10 +29,10 @@ export function ComprovantePix(
 
    doc.setTextColor("#000");
    doc.setFontSize(12);
-   doc.text("B2B ipy Tecnologia e Gestão ", 22, 69);
+   doc.text("METTADATA TECNOLOGIA LTDA ", 22, 69);
 
    doc.setFontSize(12);
-   doc.text("41.466.661/0001-94 ", 22, 76);
+   doc.text("48.173.509/0001-62", 22, 76);
 
    //direita
 

@@ -98,7 +98,7 @@ function Dasboard() {
    };
    useEffect(() => {
       axios
-         .post("http://localhost:2311/dashboard/cliente", {}, headers)
+         .post("https://api.binbank.com.br/dashboard/cliente", {}, headers)
          .then((res) => {
             console.log(res.data);
 
@@ -513,7 +513,7 @@ function Dasboard() {
 
                                     axios
                                        .post(
-                                          "http://localhost:2311/dashboard",
+                                          "https://api.binbank.com.br/dashboard",
                                           {
                                              user: e.currentTarget.value,
                                           },

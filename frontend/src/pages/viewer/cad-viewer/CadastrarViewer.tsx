@@ -54,7 +54,7 @@ function CadastrarViewer() {
 
                               axios
                                  .post(
-                                    "http://localhost:2311/viewer/criar",
+                                    "https://api.binbank.com.br/viewer/criar",
                                     requestBody,
                                     headers
                                  )

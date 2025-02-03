@@ -16,6 +16,7 @@ import criarSubContas from "./controllers/post/criar-subcontas";
 import listRepresentantes from "./controllers/get/list-representantes";
 import representantePerm from "./middleware/representantePerm";
 import dashboardCliente from "./controllers/post/dashboard-cliente";
+import getTaxas from "./controllers/get/get_taxas";
 
 const router = express.Router();
 
@@ -38,6 +39,7 @@ router.post("/pix/cobrar", JWTverify, CreateQRcode);
 
 router.get("/extrato/:page", JWTverify, extrato);
 router.get("/representantes", JWTverify, representantePerm, listRepresentantes);
+router.get("/get-taxas", JWTverify, getTaxas);
 
 router.get("/admin/balance", JWTverify, balanceAdmin);
 router.get("/balance", JWTverify, balance);

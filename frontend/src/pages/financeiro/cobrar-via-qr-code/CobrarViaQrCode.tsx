@@ -130,7 +130,7 @@ function CobrarViaQrCode() {
 
                                  axios
                                     .post(
-                                       "http://localhost:2311/pix/cobrar",
+                                       "https://api.binbank.com.br/pix/cobrar",
                                        {
                                           amount: amount_number,
                                           // cpf: cpf,

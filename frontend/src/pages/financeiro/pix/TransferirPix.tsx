@@ -156,12 +156,14 @@ const TransferirPix: React.FC = () => {
                         </div>
                      </div>
                      <div className="flex gap-10 w-full justify-center mb-10  mt-10 items-center ">
-                        <div
+                        <button
+                           type="button"
+                           disabled={!isLoading ? false : true}
                            onClick={() => {
                               setIsLoading(true);
                               axios
                                  .post(
-                                    "http://localhost:2311/pix/transfer",
+                                    "https://api.binbank.com.br/pix/transfer",
                                     {
                                        key: data.key,
                                        amount: data.amount,
@@ -212,10 +214,16 @@ const TransferirPix: React.FC = () => {
                                     setModalVisible(false);
                                  });
                            }}
-                           className="max-[1000px]:w-[90%] transition min-[1000px]:px-20 text-white focus:outline-none hover:bg-[var(--hover-primary-color)] font-medium rounded-lg text-sm py-2.5 text-center bg-[var(--primary-color)] cursor-pointer"
+                           className={`max-[1000px]:w-[90%] transition min-[1000px]:px-20 text-white focus:outline-none font-medium rounded-lg text-sm py-2.5 text-center bg-[var(--primary-color)]  ${
+                              !isLoading ? "cursor-pointer" : ""
+                           }  ${
+                              !isLoading
+                                 ? "hover:bg-[var(--hover-primary-color)]"
+                                 : ""
+                           }`}
                         >
                            {isLoading ? "carregando..." : "Pagar"}
-                        </div>
+                        </button>
                      </div>
                   </form>
                </div>
@@ -245,7 +253,7 @@ const TransferirPix: React.FC = () => {
                                  setIsLoading(false);
                                  // axios
                                  //    .get(
-                                 //       `http://localhost:2311/pix/consultar/${data.key}/${pixAdressKey}`,
+                                 //       `https://api.binbank.com.br/pix/consultar/${data.key}/${pixAdressKey}`,
                                  //       headers
                                  //    )
                                  //    .then((res) => {

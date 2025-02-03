@@ -152,7 +152,7 @@ function AberturaDeContas() {
                   <img
                      src={logo}
                      alt="logo"
-                     className="w-60 rotate-[160deg] drop-shadow-2xl"
+                     className="w-60 rotate-[180deg] drop-shadow-2xl"
                   />
                </div>
             </section>

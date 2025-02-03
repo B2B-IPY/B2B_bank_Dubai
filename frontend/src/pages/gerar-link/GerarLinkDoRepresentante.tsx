@@ -18,6 +18,12 @@ interface Representantes {
    user: string;
    user_id: string;
 }
+interface TaxasDefault {
+   cashin_fixo: number;
+   cashin_porcent: number;
+   cashout_fixo: number;
+   cashout_porcent: number;
+}
 
 function GerarLinkDoRepresentante() {
    const taxas: Taxas = {
@@ -44,6 +50,12 @@ function GerarLinkDoRepresentante() {
    >([]);
 
    const [representantes, setRepresentantes] = useState<Representantes[]>([]);
+   const [taxasDefault, setTaxasDefault] = useState<TaxasDefault>({
+      cashin_fixo: 0,
+      cashin_porcent: 0,
+      cashout_fixo: 0,
+      cashout_porcent: 0,
+   });
 
    $(() => {
       $(".MONEY").mask("000.000.000,00", { reverse: true });
@@ -66,7 +78,18 @@ function GerarLinkDoRepresentante() {
          navigate("/login");
 
       axios
-         .get("http://localhost:2311/representantes", headers)
+         .get("https://api.binbank.com.br/get-taxas", headers)
+         .then(({ data }) => {
+            setTaxasDefault(data);
+         })
+         .catch((error) => {
+            console.log(error);
+            toast.error(
+               error.response.data.error || "Falha ao carregar taxas padrão"
+            );
+         });
+      axios
+         .get("https://api.binbank.com.br/representantes", headers)
          .then(({ data }) => {
             console.log(data);
             setRepresentantes(data);
@@ -84,9 +107,60 @@ function GerarLinkDoRepresentante() {
    }, []);
    return (
       <>
-         <div className="gap-10 flex-col pb-20 px-[5%] w-full h-screen flex overflow-y-auto items-center bg-[var(--background-primary-color)]">
+         <div className="gap-10 flex-col pb-20 px-[5%] overflow-x-hidden w-full h-screen flex overflow-y-auto items-center bg-[var(--background-primary-color)]">
+            <div className="flex flex-col mt-10 w-full">
+               <div className="w-full justify-center items-center text-center mb-3">
+                  <span className="text-[22px] font-bold text-[var(--text-primary-color)]">
+                     Taxas padrão
+                  </span>
+               </div>
+               <div className="grid grid-cols-2 bg-[var(--background-secound-color)] rounded-lg divide-x py-5 px-5">
+                  <div className="">
+                     <h1 className="text-white text-[20px] font-semibold mb-2">
+                        Cash-in
+                     </h1>
+                     <div className="flex flex-col">
+                        <span className="text-[var(--title-primary-color)]">
+                           Fixo
+                        </span>
+                        <span className="text-[18px] text-[#cacaca]">
+                           R$ {taxasDefault.cashin_fixo}
+                        </span>
+                     </div>
+                     <div className="flex flex-col">
+                        <span className="text-[var(--title-primary-color)]">
+                           Porcentagem
+                        </span>
+                        <span className="text-[18px] text-[#cacaca]">
+                           {taxasDefault.cashin_porcent} %
+                        </span>
+                     </div>
+                  </div>
+                  <div className="pl-4">
+                     <h1 className="text-white text-[20px] font-semibold mb-2">
+                        Cash-out
+                     </h1>
+                     <div className="flex flex-col">
+                        <span className="text-[var(--title-primary-color)]">
+                           Fixo
+                        </span>
+                        <span className="text-[18px] text-[#cacaca]">
+                           R$ {taxasDefault.cashout_fixo}
+                        </span>
+                     </div>
+                     <div className="flex flex-col">
+                        <span className="text-[var(--title-primary-color)]">
+                           Porcentagem
+                        </span>
+                        <span className="text-[18px] text-[#cacaca]">
+                           {taxasDefault.cashout_porcent} %
+                        </span>
+                     </div>
+                  </div>
+               </div>
+            </div>
             {isLoading ? (
-               <div className=" px-[5%] w-full my-10 flex flex-col gap-3">
+               <div className=" px-[5%] w-full my-5 flex flex-col gap-3">
                   <Skeleton
                      className=" h-[190px] rounded my-3"
                      count={1}
@@ -102,7 +176,7 @@ function GerarLinkDoRepresentante() {
                </div>
             ) : (
                <>
-                  <div className="w-full mt-20 mx-[5%]">
+                  <div className="w-full mt-5 ">
                      <div className=" flex flex-col gap-2 w-full rounded-lg bg-[var(--background-secound-color)]">
                         <div className="flex divide-y divide-gray-200/20 flex-col bg-[var(--background-secound-color)] w-full rounded px-12  ">
                            <div className="grid gap-10 py-10">
@@ -198,6 +272,28 @@ function GerarLinkDoRepresentante() {
                                     <button
                                        className="text-[var(--title-primary-color)] rounded font-bold capitalize bg-[var(--primary-color)] px-8 py-2 hover:opacity-90 transition"
                                        onClick={() => {
+                                          if (
+                                             parseFloat(
+                                                taxas_representante[0].taxas
+                                                   .bank.cashin.fixo
+                                             ) > taxasDefault.cashin_fixo ||
+                                             parseFloat(
+                                                taxas_representante[0].taxas
+                                                   .bank.cashin.porcentagem
+                                             ) > taxasDefault.cashin_porcent ||
+                                             parseFloat(
+                                                taxas_representante[0].taxas
+                                                   .bank.cashout.fixo
+                                             ) > taxasDefault.cashout_fixo ||
+                                             parseFloat(
+                                                taxas_representante[0].taxas
+                                                   .bank.cashout.porcentagem
+                                             ) > taxasDefault.cashout_porcent
+                                          ) {
+                                             return toast.warn(
+                                                "As taxas de representante não podem ser maiores que as taxas padrão"
+                                             );
+                                          }
                                           const link = generateLink();
                                           navigator.clipboard.writeText(link);
                                           toast.success(

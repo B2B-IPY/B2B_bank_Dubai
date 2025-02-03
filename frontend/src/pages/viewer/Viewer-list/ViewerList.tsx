@@ -27,7 +27,7 @@ function ViewerList() {
          navigate("/login");
 
       axios
-         .get("http://localhost:2311/viewer", headers)
+         .get("https://api.binbank.com.br/viewer", headers)
          .then((res) => {
             const data = res.data;
             setData(data);
@@ -87,7 +87,7 @@ function ViewerList() {
                                        setIsLoading(true);
                                        axios
                                           .delete(
-                                             `http://localhost:2311/viewer/${item.id}`,
+                                             `https://api.binbank.com.br/viewer/${item.id}`,
                                              headers
                                           )
                                           .then(() => {

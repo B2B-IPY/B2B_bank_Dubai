@@ -24,7 +24,7 @@ function LoginPage() {
       setIsLoading(true);
 
       axios
-         .post("http://localhost:2311/login", {
+         .post("https://api.binbank.com.br/login", {
             user: user,
             password: password,
          })

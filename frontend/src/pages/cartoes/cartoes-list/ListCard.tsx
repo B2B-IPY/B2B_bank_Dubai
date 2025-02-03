@@ -49,7 +49,7 @@ function ListCard() {
          navigate("/login");
 
       axios
-         .post("http://localhost:2311/cartoes", {}, headers)
+         .post("https://api.binbank.com.br/cartoes", {}, headers)
          .then((res) => {
             const data: Cartoes[] = res.data;
             setData(data);
@@ -65,10 +65,12 @@ function ListCard() {
          .finally(() => {
             setIsLoading(false);
          });
-      axios.post("http://localhost:2311/clientes", {}, headers).then((res) => {
-         const data = res.data;
-         setClienteList(data);
-      });
+      axios
+         .post("https://api.binbank.com.br/clientes", {}, headers)
+         .then((res) => {
+            const data = res.data;
+            setClienteList(data);
+         });
    }, []);
    function filtrar() {
       if (isLoading) return;
@@ -76,7 +78,7 @@ function ListCard() {
 
       axios
          .post(
-            "http://localhost:2311/cartoes",
+            "https://api.binbank.com.br/cartoes",
             {
                numero: $("#search").val(),
             },
@@ -109,7 +111,7 @@ function ListCard() {
       setIsLoading(true);
 
       axios
-         .post("http://localhost:2311/cartoes/criar", cardInfo, headers)
+         .post("https://api.binbank.com.br/cartoes/criar", cardInfo, headers)
          .then(() => {
             toast.success("Cartão criado com sucesso");
             setModalVisible(false);

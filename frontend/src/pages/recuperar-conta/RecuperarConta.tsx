@@ -29,7 +29,7 @@ function RecuperarConta() {
       setIsLoading(true);
 
       axios
-         .post("http://localhost:2311/recuperar-conta", {
+         .post("https://api.binbank.com.br/recuperar-conta", {
             user: user,
             totp: totp,
          })
