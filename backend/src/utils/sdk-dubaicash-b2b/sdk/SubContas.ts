@@ -188,12 +188,20 @@ export class SubContas {
       const connection = mysql.createConnection(config);
       connection.connect();
 
+      const valorFinal = amount / 2;
       try {
          const sql = await this.Query(
             "UPDATE logins SET valor = valor + ? WHERE id_logins = ?",
-            [amount, id_logins],
+            [valorFinal, id_logins],
             connection
          );
+         if (sql) {
+            const spliContaMae = await this.Query(
+               "UPDATE logins SET valor = valor + ? WHERE id_logins = ?",
+               [valorFinal, 1],
+               connection
+            );
+         }
          return sql;
       } catch (error) {
          console.log(error);
