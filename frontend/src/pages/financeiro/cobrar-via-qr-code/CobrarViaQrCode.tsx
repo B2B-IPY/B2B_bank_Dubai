@@ -116,13 +116,13 @@ function CobrarViaQrCode() {
                                  e.preventDefault();
                                  const amount =
                                     ($("#valor").val() as string) || "0";
-                                 const cpf =
-                                    ($("#cpfDevedor").val() as string).replace(
-                                       /[^\d]/g,
-                                       ""
-                                    ) || "00000000000";
-                                 const nome =
-                                    ($("#nomeDevedor").val() as string) || "";
+                                 // const cpf =
+                                 //    ($("#cpfDevedor").val() as string).replace(
+                                 //       /[^\d]/g,
+                                 //       ""
+                                 //    ) || "00000000000";
+                                 // const nome =
+                                 //    ($("#nomeDevedor").val() as string) || "";
                                  const amount_number = BRLtoNumber(amount);
 
                                  if (isLoading) return;
@@ -133,8 +133,8 @@ function CobrarViaQrCode() {
                                        "http://localhost:2311/pix/cobrar",
                                        {
                                           amount: amount_number,
-                                          cpf: cpf,
-                                          nome: nome,
+                                          // cpf: cpf,
+                                          // nome: nome,
                                        },
                                        headers
                                     )
@@ -166,7 +166,7 @@ function CobrarViaQrCode() {
                            >
                               <div className="flex flex-col gap-10 w-full max-[1000px]:flex-col">
                                  <div className="grid gap-5 w-full">
-                                    <div>
+                                    {/* <div>
                                        <label
                                           htmlFor="nomeDevedor"
                                           className="block mb-2 text-sm font-medium text-[var(--title-primary-color)] "
@@ -193,7 +193,7 @@ function CobrarViaQrCode() {
                                           placeholder="000.000.000-00"
                                           className="CPF bg-transparent border border-gray-300 text-[var(--title-primary-color)] sm:text-sm rounded-lg focus:ring-[var(--primary-color)] focus:border-[var(--primary-color)] block w-full p-2.5 max-[1000px]:bg-transparent max-[1000px]:focus:outline-none max-[1000px]:focus:ring-1 max-[1000px]:focus:border-[var(--primary-color)]"
                                        />
-                                    </div>
+                                    </div> */}
                                     <div>
                                        <label
                                           htmlFor="valor"

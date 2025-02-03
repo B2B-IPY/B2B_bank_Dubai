@@ -15,6 +15,7 @@ import transferirPixCopiaCola from "./controllers/post/transf-pix-copiaCola";
 import criarSubContas from "./controllers/post/criar-subcontas";
 import listRepresentantes from "./controllers/get/list-representantes";
 import representantePerm from "./middleware/representantePerm";
+import dashboardCliente from "./controllers/post/dashboard-cliente";
 
 const router = express.Router();
 
@@ -23,14 +24,16 @@ router.post("/login", login);
 
 router.post("/subcontas/criar", criarSubContas);
 
+router.post("/dashboard/cliente", JWTverify, dashboardCliente);
+
 router.get("/pix/consultar/:key", JWTverify, consultarChavePix);
 router.post("/pix/transfer", JWTverify, verifySaldo, transferirPix);
-router.post(
-   "/pix/emv/transfer",
-   JWTverify,
-   verifySaldo,
-   transferirPixCopiaCola
-);
+// router.post(
+//    "/pix/emv/transfer",
+//    JWTverify,
+//    verifySaldo,
+//    transferirPixCopiaCola
+// );
 router.post("/pix/cobrar", JWTverify, CreateQRcode);
 
 router.get("/extrato/:page", JWTverify, extrato);

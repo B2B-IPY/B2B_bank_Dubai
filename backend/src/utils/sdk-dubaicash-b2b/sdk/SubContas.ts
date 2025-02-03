@@ -167,11 +167,49 @@ export class SubContas {
    async rmSaldo(id_logins: string, amount: number): Promise<SubConta[]> {
       const connection = mysql.createConnection(config);
       connection.connect();
-      const valorFinal = amount - 0.15;
+      const valorFinal = amount + 0.15;
+
       try {
          const sql = await this.Query(
             "UPDATE logins SET valor = valor - ? WHERE id_logins = ?",
             [valorFinal, id_logins],
+            connection
+         );
+
+         return sql;
+      } catch (error) {
+         console.log(error);
+         throw error;
+      } finally {
+         connection.end();
+      }
+   }
+   async TranfersRep(id_logins: string, amount: number): Promise<SubConta[]> {
+      const connection = mysql.createConnection(config);
+      connection.connect();
+
+      try {
+         const sql = await this.Query(
+            "UPDATE logins SET valor = valor + ? WHERE id_logins = ?",
+            [amount, id_logins],
+            connection
+         );
+         return sql;
+      } catch (error) {
+         console.log(error);
+         throw error;
+      } finally {
+         connection.end();
+      }
+   }
+   async tarifar(id_logins: string, tarifa: number): Promise<SubConta[]> {
+      const connection = mysql.createConnection(config);
+      connection.connect();
+
+      try {
+         const sql = await this.Query(
+            "UPDATE logins SET valor = valor - ? WHERE id_logins = ?",
+            [tarifa, id_logins],
             connection
          );
 

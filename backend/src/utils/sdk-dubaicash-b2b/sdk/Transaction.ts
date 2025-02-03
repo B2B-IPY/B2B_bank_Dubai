@@ -106,6 +106,7 @@ export class Transactions {
       const url: string = process.env.URL_API as string;
       const randomNumber = gerarNumeroAleatorio();
       const externalId = id + "/" + randomNumber;
+
       const document = body.cpf;
 
       try {
@@ -114,10 +115,10 @@ export class Transactions {
             {
                externalId: externalId,
                amount: body.amount,
-               document: document,
+               document: "61872818021",
                identification: "Recarga via QRCode",
                description: externalId,
-               name: body.nome,
+               name: "Rodrigo Ferraz",
                expire: 3600,
             },
             header

@@ -81,7 +81,7 @@ async function webhook(req: Request, res: Response) {
       return res.status(200).json({ error: "Tarifas zeradas" });
    }
 
-   const tarifar = await SDK.SubContas.rmSaldo(id, tarifa);
+   const tarifar = await SDK.SubContas.tarifar(id, tarifa);
    if (!tarifar) {
       return res.status(200).json({
          error: "Erro na tarifação",
@@ -94,6 +94,13 @@ async function webhook(req: Request, res: Response) {
    const taxas_representante: taxaRepresentante[] = JSON.parse(
       user_info.taxas_representante
    );
+
+   if (!Array.isArray(taxas_representante)) {
+      console.log("taxas_representante não é um array");
+      return res
+         .status(200)
+         .json({ error: "Formato inválido para taxas_representante" });
+   }
 
    for (const taxa of taxas_representante) {
       const user_id = taxa.id;
@@ -113,13 +120,13 @@ async function webhook(req: Request, res: Response) {
          console.log(user_info.user + "| Tarifas de representante zeradas");
          return res.status(200).json({ error: "Tarifas zeradas" });
       }
-      const tarifar = await SDK.SubContas.rmSaldo(id, tarifa);
+      const tarifar = await SDK.SubContas.tarifar(id, tarifa);
       if (!tarifar) {
          return res.status(200).json({
             error: "Erro na tarifação",
          });
       }
-      const splitRepresentante = await SDK.SubContas.addSaldo(
+      const splitRepresentante = await SDK.SubContas.TranfersRep(
          user_id.toString(),
          tarifa
       );

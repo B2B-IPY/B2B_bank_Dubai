@@ -26,14 +26,14 @@ export const CreateTransferZod = z.object({
 
 export interface CreateQR {
    amount: number;
-   cpf: string;
-   nome: string;
+   cpf?: string;
+   nome?: string;
 }
 
 export const CreateQRZod = z.object({
    amount: z.number({ message: "amount inválido" }),
-   cpf: z.string({ message: "cpfCnpj inválido" }),
-   nome: z.string({ message: "nome inválido" }),
+   cpf: z.string({ message: "cpfCnpj inválido" }).optional(),
+   nome: z.string({ message: "nome inválido" }).optional(),
 });
 
 export interface Taxas {

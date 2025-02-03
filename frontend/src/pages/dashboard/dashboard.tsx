@@ -98,10 +98,12 @@ function Dasboard() {
    };
    useEffect(() => {
       axios
-         .post("http://localhost:2311/dashboard-cliente", {}, headers)
+         .post("http://localhost:2311/dashboard/cliente", {}, headers)
          .then((res) => {
-            // setData(res.data);
-            // setUsers(res.data.users);
+            console.log(res.data);
+
+            setData(res.data);
+            setUsers(res.data.users);
             console.log(res.data);
          })
          .catch((err) => {
@@ -159,7 +161,7 @@ function Dasboard() {
                            </div>
                         </div>
                         <div className="flex flex-wrap gap-8 ">
-                           <div className="flex gap-2 items-center">
+                           {/* <div className="flex gap-2 items-center">
                               <span className="font-semibold capitalize">
                                  cashin
                               </span>
@@ -172,7 +174,7 @@ function Dasboard() {
                                          data?.total.cashin || 0
                                       )}
                               </span>
-                           </div>
+                           </div> */}
                            <div className="flex gap-2 items-center">
                               <span className="font-semibold capitalize">
                                  cashout
@@ -187,7 +189,7 @@ function Dasboard() {
                                       )}
                               </span>
                            </div>
-                           <div className="flex gap-2 items-center">
+                           {/* <div className="flex gap-2 items-center">
                               <span className="font-semibold capitalize">
                                  taxas
                               </span>
@@ -200,7 +202,7 @@ function Dasboard() {
                                          data?.total.taxas || 0
                                       )}
                               </span>
-                           </div>
+                           </div> */}
                         </div>
                      </div>
                      <section className="grid grid-cols-2 max-[1300px]:grid-cols-1  w-full  gap-4">
@@ -294,96 +296,7 @@ function Dasboard() {
                               </div>
                            </div>
                         </div>
-                        <div>
-                           <div className="px-3 py-5 rounded-lg bg-white shadow mb-5">
-                              <div className="flex justify-between mb-4">
-                                 <h1 className="text-[20px] text-[var(--background-secound-color)] font-semibold">
-                                    Cash-in
-                                 </h1>
-                              </div>
-                              <div className="flex-col">
-                                 <div className="flex justify-center gap-3 w-full mb-5">
-                                    <div className="flex flex-col w-full px-3 py-4 rounded-lg bg-[var(--background-secound-color)]">
-                                       <span className="text-white text-[17px] font-semibold">
-                                          Mês atual
-                                       </span>
-                                       <span className="text-white text-[19px] font-semibold">
-                                          R${" "}
-                                          {isHidden
-                                             ? "****"
-                                             : formatarNumeroParaBRL(
-                                                  data?.cashin.mes_atual || 0
-                                               )}
-                                       </span>
-                                    </div>
-                                    <div className="flex flex-col w-full px-3 py-4 rounded-lg border border-gray-200">
-                                       <span className="text-[var(--background-secound-color)] text-[17px] font-semibold">
-                                          Mês anterior
-                                       </span>
-                                       <span className="text-[var(--background-secound-color)] text-[19px] font-semibold">
-                                          R${" "}
-                                          {isHidden
-                                             ? "****"
-                                             : formatarNumeroParaBRL(
-                                                  data?.cashin.mes_anterior || 0
-                                               )}
-                                       </span>
-                                    </div>
-                                 </div>
-                                 <div>
-                                    <div className="h-[200px]">
-                                       <ResponsiveContainer
-                                          width="100%"
-                                          height="100%"
-                                       >
-                                          <LineChart
-                                             width={500}
-                                             height={300}
-                                             data={
-                                                isHidden
-                                                   ? [
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                        { valor: 0 },
-                                                     ]
-                                                   : data?.cashin
-                                                        .relatorio_ultimo_ano
-                                             }
-                                             margin={{
-                                                top: 5,
-                                                right: 5,
-                                                left: 0,
-                                                bottom: 5,
-                                             }}
-                                          >
-                                             <CartesianGrid strokeDasharray="3 3" />
-                                             <XAxis dataKey="name" />
-                                             <YAxis />
-                                             <Tooltip />
 
-                                             <Line
-                                                type="monotone"
-                                                dataKey="uv"
-                                                stroke="#8884d8"
-                                                activeDot={{ r: 5 }}
-                                                strokeWidth={3}
-                                             />
-                                          </LineChart>
-                                       </ResponsiveContainer>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
                         <div>
                            <div className="px-3 py-5 rounded-lg bg-white shadow mb-5">
                               <div className="flex justify-between mb-4">
@@ -475,11 +388,13 @@ function Dasboard() {
                               </div>
                            </div>
                         </div>
-                        <div className="gap-4 flex flex-col">
+                     </section>
+                     <section className=" w-full gap-4 ">
+                        <div className="gap-4 grid  grid-cols-2   max-[1300px]:grid-cols-1">
                            <div className="bg-white shadow p-4 rounded-lg">
                               <div className="flex justify-between mb-4">
                                  <h1 className="text-[20px] text-[var(--background-secound-color)] font-semibold">
-                                    Ticket Médio
+                                    Ticket Médio de cashout
                                  </h1>
                               </div>
                               <div className="flex gap-2 justify-center">
@@ -492,7 +407,7 @@ function Dasboard() {
                                        {isHidden
                                           ? "****"
                                           : formatarNumeroParaBRL(
-                                               (data?.cashin.mes_atual || 0) /
+                                               (data?.cashout.mes_atual || 0) /
                                                   (data
                                                      ?.quantidade_de_transacoes
                                                      .mes_atual || 0)
@@ -508,11 +423,11 @@ function Dasboard() {
                                        {isHidden
                                           ? "****"
                                           : formatarNumeroParaBRL(
-                                               (data?.cashin.mes_anterior ||
+                                               (data?.cashout.mes_anterior ||
                                                   0) /
                                                   (data
                                                      ?.quantidade_de_transacoes
-                                                     .mes_anterior || 0)
+                                                     .mes_anterior || 0) || 0
                                             )}
                                     </span>
                                  </div>
@@ -549,7 +464,7 @@ function Dasboard() {
                                  </div>
                               </div>
                            </div>
-                           <div className="bg-white shadow p-4 rounded-lg">
+                           {/* <div className="bg-white shadow p-4 rounded-lg">
                               <div className="flex justify-between mb-4">
                                  <h1 className="text-[20px] text-[var(--background-secound-color)] font-semibold">
                                     Tarifas cobradas
@@ -583,10 +498,10 @@ function Dasboard() {
                                     </span>
                                  </div>
                               </div>
-                           </div>
+                           </div> */}
                         </div>
                      </section>
-                     {(localStorage.getItem("role") === "admin" ||
+                     {/* {(localStorage.getItem("role") === "admin" ||
                         localStorage.getItem("role") === "comercial" ||
                         localStorage.getItem("role") === "representante") && (
                         <section className="mt-10  w-full  gap-4">
@@ -750,7 +665,7 @@ function Dasboard() {
                               })}
                            </div>
                         </section>
-                     )}
+                     )} */}
                   </main>
                </>
             )}
