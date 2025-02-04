@@ -73,7 +73,7 @@ function AberturaDeContas() {
 
    //    setIsLoading(true);
    //    axios
-   //       .post("http://localhost:2311/accounts/criar", {
+   //       .post("https://api.binbank.com.br/accounts/criar", {
    //          user: request.user,
    //          nome: request.nome,
    //          email: request.email,
@@ -175,7 +175,7 @@ function AberturaDeContas() {
 
                               axios
                                  .post(
-                                    "http://localhost:2311/subcontas/criar",
+                                    "https://api.binbank.com.br/subcontas/criar",
                                     {
                                        user: request.user,
                                        name: request.nome,
