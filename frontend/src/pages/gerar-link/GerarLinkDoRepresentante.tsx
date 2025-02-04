@@ -78,7 +78,7 @@ function GerarLinkDoRepresentante() {
          navigate("/login");
 
       axios
-         .get("https://api.binbank.com.br/get-taxas", headers)
+         .get("https://api.binbank.com.br/getTaxas", headers)
          .then(({ data }) => {
             setTaxasDefault(data);
          })
@@ -222,10 +222,16 @@ function GerarLinkDoRepresentante() {
                                        });
                                     }}
                                  >
-                                    <option value="">Nenhum</option>
+                                    <option
+                                       value=""
+                                       className="bg-[var(--background-secound-color)]"
+                                    >
+                                       Nenhum
+                                    </option>
                                     {representantes.map((representante, i) => {
                                        return (
                                           <option
+                                             className="bg-[var(--background-secound-color)]"
                                              key={i}
                                              value={
                                                 representante.id_logins +

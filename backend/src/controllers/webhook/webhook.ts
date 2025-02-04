@@ -139,6 +139,9 @@ async function webhook(req: Request, res: Response) {
       console.log(
          `${user_info.user} | Transferencia ${object} tarifado com sucesso: ${tarifa} para o representante ${user_id}`
       );
+      console.log(
+         `${user_info.user} | Transferencia ${object} tarifado com sucesso: ${tarifa} para o representante ${user_id}`
+      );
    }
 
    return res.status(200).json({

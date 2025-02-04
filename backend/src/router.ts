@@ -39,7 +39,7 @@ router.post("/pix/cobrar", JWTverify, CreateQRcode);
 
 router.get("/extrato/:page", JWTverify, extrato);
 router.get("/representantes", JWTverify, representantePerm, listRepresentantes);
-router.get("/get-taxas", JWTverify, getTaxas);
+router.get("/getTaxas", JWTverify, getTaxas);
 
 router.get("/admin/balance", JWTverify, balanceAdmin);
 router.get("/balance", JWTverify, balance);
