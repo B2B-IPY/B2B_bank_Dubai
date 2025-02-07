@@ -3,6 +3,9 @@ import SDK_DubaiCash_B2B from "../../utils/sdk-dubaicash-b2b";
 import config from "../../DB/config";
 import mysql from "mysql2";
 import { taxaRepresentante } from "../../utils/sdk-dubaicash-b2b/types/Transactions";
+import { WebSocketServer } from "ws"; // Certifique-se de que o tipo está correto
+
+let connectedClients: WebSocket[] = []; // Lista de clientes WebSocket conectados
 
 interface webhookResponse {
    uuid: string;
@@ -24,9 +27,19 @@ interface webhookResponse {
    event: string;
 }
 
+function notifyClients(data: any) {
+   connectedClients.forEach((client) => {
+      if (client.readyState === client.OPEN) {
+         client.send(JSON.stringify(data)); // Envia o webhook completo
+      }
+   });
+}
+
 async function webhook(req: Request, res: Response) {
    const webhook_respose = req.body;
    console.log(webhook_respose);
+
+   notifyClients(webhook_respose);
 
    const externalId = webhook_respose.transaction.externalId;
    const id = externalId.split("/")[0];

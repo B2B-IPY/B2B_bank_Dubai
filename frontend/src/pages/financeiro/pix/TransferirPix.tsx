@@ -39,6 +39,35 @@ export interface PixResponse {
    };
 }
 
+interface BankData {
+   documentNumber: string;
+   endtoendId: string;
+   originalendtoendId: string | null;
+   key: string;
+   name: string | null;
+   tspb: string;
+   account: string;
+}
+
+interface Transaction {
+   transactionId: string;
+   uuid: string;
+   externalId: string;
+   amount: number;
+   subType: string;
+   type: string;
+   tspb: string;
+   account: string;
+}
+
+interface FinancialEvent {
+   uuid: string;
+   bankData: BankData;
+   transaction: Transaction;
+   status: string;
+   event: string;
+}
+
 function BRLtoNumber(brl: string) {
    return parseFloat(brl.replace(".", "").replace(",", "."));
 }
@@ -80,9 +109,33 @@ const TransferirPix: React.FC = () => {
       },
    });
    const [isLoading, setIsLoading] = useState<boolean>(false);
-   const [totpModal, setTotpModal] = useState<boolean>(false);
    const [modalVisible, setModalVisible] = useState<boolean>(false);
    const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+   const [webhook_response, setWebhook_response] = useState<FinancialEvent>({
+      uuid: "",
+      bankData: {
+         documentNumber: "",
+         endtoendId: "",
+         originalendtoendId: null,
+         key: "",
+         name: null,
+         tspb: "",
+         account: "",
+      },
+      transaction: {
+         transactionId: "",
+         uuid: "",
+         externalId: "",
+         amount: 0,
+         subType: "",
+         type: "",
+         tspb: "",
+         account: "",
+      },
+      status: "",
+      event: "",
+   });
+   const [webhook_response2, setWebhook_response2] = useState<any>();
 
    $(() => {
       $(".MONEY").mask("###.000,00", { reverse: true });
@@ -102,6 +155,47 @@ const TransferirPix: React.FC = () => {
          navigate("/login");
    }, []);
 
+   async function webhook() {
+      const ws = new WebSocket("ws://localhost:2312"); // Ajuste a URL se necessário
+
+      ws.onmessage = (event) => {
+         console.log("Mensagem recebida do WebSocket:", event.data); // Verifique o conteúdo da mensagem
+
+         try {
+            console.log("event: ", event.data);
+            setWebhook_response2(event.data);
+            const data = JSON.parse(event.data); // Recebe o webhook response completo
+            console.log("Mensagem decodificada:", data); // Verifique a mensagem depois de decodificada
+
+            setWebhook_response(data); // Salva o webhook response no estado
+
+            // Ação após a resposta do webhook
+            toast.success("Transferência realizada com sucesso");
+
+            const currentTime = new Date().toLocaleTimeString();
+
+            const blob = ComprovantePix(
+               "", // Ajuste conforme necessário
+               "", // Ajuste conforme necessário
+               "", // Ajuste conforme necessário
+               "", // Ajuste conforme necessário
+               "", // Ajuste conforme necessário
+               "", // Ajuste conforme necessário
+               formatarNumeroParaBRL(data.transaction.amount), // Acesso correto a 'data.transaction.amount'
+               "", // Ajuste conforme necessário
+               currentTime,
+               ""
+            );
+
+            setIframeUrl(blob); // Atualiza o iframe com o comprovante
+         } catch (error) {
+            console.error("Erro ao processar dados do WebSocket:", error);
+         }
+
+         ws.close(); // Fecha a conexão WebSocket
+      };
+   }
+
    return (
       <>
          <div className="gap-10 flex-col w-full h-screen overflow-y-auto flex items-center  bg-[var(--background-primary-color)] max-[1000px]:bg-[var(--background-secound-color)]">
@@ -111,6 +205,7 @@ const TransferirPix: React.FC = () => {
                   <div
                      onClick={() => {
                         setIframeUrl(null);
+                        // console.log(webhook_response);
                      }}
                      className="w-[700px] text-center bg-[var(--active-color)] text-white p-2 cursor-pointer font-semibold"
                   >
@@ -172,32 +267,9 @@ const TransferirPix: React.FC = () => {
                                     headers
                                  )
                                  .then((res) => {
-                                    console.log(res.data);
-                                    console.log(
-                                       res.data.data.createdAt.split("T")[0]
-                                    );
+                                    setIsLoading(true);
                                     setRes(res.data);
-                                    setTotpModal(false);
-                                    toast.success(
-                                       "Transferência realizada com sucesso"
-                                    );
-
-                                    const currentTime =
-                                       new Date().toLocaleTimeString();
-
-                                    const blob = ComprovantePix(
-                                       res.data.data.key,
-                                       res.data.data.name,
-                                       res.data.data.cpfCnpj,
-                                       res.data.data.bankName,
-                                       "",
-                                       res.data.data.account,
-                                       formatarNumeroParaBRL(data.amount),
-                                       res.data.transactionId,
-                                       currentTime,
-                                       res.data.data.createdAt.split("T")[0]
-                                    );
-                                    setIframeUrl(blob);
+                                    webhook();
                                  })
                                  .catch((err) => {
                                     console.error(err);
@@ -346,6 +418,14 @@ const TransferirPix: React.FC = () => {
                </div>
             </section>
          </div>
+         <button
+            onClick={() => {
+               console.log(webhook_response);
+               console.log(webhook_response2);
+            }}
+         >
+            dsad
+         </button>
       </>
    );
 };

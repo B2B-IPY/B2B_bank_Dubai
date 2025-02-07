@@ -35,6 +35,8 @@ export class Transactions {
             },
             header
          );
+         console.log(result);
+
          return result;
       } catch (error) {
          const err = error as any;
