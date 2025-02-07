@@ -202,6 +202,7 @@ export class SubContas {
                connection
             );
          }
+
          return sql;
       } catch (error) {
          console.log(error);
@@ -220,6 +221,13 @@ export class SubContas {
             [tarifa, id_logins],
             connection
          );
+         if (sql) {
+            const spliContaMae = await this.Query(
+               "UPDATE logins SET valor = valor + ? WHERE id_logins = ?",
+               [tarifa, 1],
+               connection
+            );
+         }
 
          return sql;
       } catch (error) {

@@ -78,7 +78,7 @@ function GerarLinkDoRepresentante() {
          navigate("/login");
 
       axios
-         .get("https://api.binbank.com.br/getTaxas", headers)
+         .get("http://localhost:2312/getTaxas", headers)
          .then(({ data }) => {
             setTaxasDefault(data);
          })
@@ -89,7 +89,7 @@ function GerarLinkDoRepresentante() {
             );
          });
       axios
-         .get("https://api.binbank.com.br/representantes", headers)
+         .get("http://localhost:2312/representantes", headers)
          .then(({ data }) => {
             console.log(data);
             setRepresentantes(data);
@@ -185,7 +185,7 @@ function GerarLinkDoRepresentante() {
                                     htmlFor="representante"
                                     className="block text-sm font-medium text-[var(--title-primary-color)] "
                                  >
-                                    representante
+                                    Representante
                                  </label>
                                  <select
                                     id="representante"

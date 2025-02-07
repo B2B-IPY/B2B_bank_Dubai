@@ -33,7 +33,7 @@ function App() {
    function reloadBalance() {
       setSaldo("");
       axios
-         .get("https://api.binbank.com.br/balance", headers)
+         .get("http://localhost:2312/balance", headers)
          .then((response) => {
             console.log(response.data);
 

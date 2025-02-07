@@ -39,7 +39,9 @@ async function webhook(req: Request, res: Response) {
    conn.end();
    if (!user_info)
       return res.status(200).json({ error: "Usuário não encontrado" });
-
+   if (webhook_respose.status === "AWAITING") {
+      return res.status(200).json({ warn: "Transferencia sendo processado" });
+   }
    if (object === "PIX_PAY_IN") {
       const setarSaldo = await SDK.SubContas.addSaldo(id, amount);
       if (!setarSaldo) {
@@ -137,10 +139,16 @@ async function webhook(req: Request, res: Response) {
       }
 
       console.log(
-         `${user_info.user} | Transferencia ${object} tarifado com sucesso: ${tarifa} para o representante ${user_id}`
+         `${user_info.user} | Transferencia ${object} tarifado com sucesso: ${
+            tarifa / 2
+         } para o representante ${user_id}`
       );
       console.log(
-         `${user_info.user} | Transferencia ${object} tarifado com sucesso: ${tarifa} para o representante ${user_id}`
+         `${
+            user_info.user
+         } | Tarifa do representante ${user_id} tarifada com sucesso: ${
+            tarifa / 2
+         }`
       );
    }
 

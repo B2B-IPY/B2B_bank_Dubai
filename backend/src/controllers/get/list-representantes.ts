@@ -5,10 +5,11 @@ import mysql, { RowDataPacket } from "mysql2";
 
 async function listRepresentantes(req: UserRequest, res: Response) {
    const conn = mysql.createConnection(config);
-
+   const filter = req.role === "admin" ? "" : "AND id_logins = ?";
    try {
       conn.query<RowDataPacket[]>(
-         "SELECT * FROM logins WHERE role = 'representante'",
+         "SELECT * FROM logins WHERE role = 'representante' " + filter,
+         [req.id_logins],
          (err, result) => {
             conn.end();
             if (err) {

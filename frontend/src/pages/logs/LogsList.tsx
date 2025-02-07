@@ -52,7 +52,7 @@ function LogsList() {
    };
    function filtrarPagina(pagina: number) {
       axios
-         .post("https://api.binbank.com.br/logs", { pagina: pagina }, headers)
+         .post("http://localhost:2312/logs", { pagina: pagina }, headers)
          .then((res) => {
             const data = res.data;
 

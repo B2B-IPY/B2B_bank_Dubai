@@ -36,7 +36,7 @@ function ViewCartoes() {
          navigate("/login");
 
       axios
-         .get("https://api.binbank.com.br/cartoes/" + id, headers)
+         .get("http://localhost:2312/cartoes/" + id, headers)
          .then((res) => {
             const data: Cartoes = res.data;
             setData(data);

@@ -163,7 +163,7 @@ const TransferirPix: React.FC = () => {
                               setIsLoading(true);
                               axios
                                  .post(
-                                    "https://api.binbank.com.br/pix/transfer",
+                                    "http://localhost:2312/pix/transfer",
                                     {
                                        key: data.key,
                                        amount: data.amount,
@@ -253,7 +253,7 @@ const TransferirPix: React.FC = () => {
                                  setIsLoading(false);
                                  // axios
                                  //    .get(
-                                 //       `https://api.binbank.com.br/pix/consultar/${data.key}/${pixAdressKey}`,
+                                 //       `http://localhost:2312/pix/consultar/${data.key}/${pixAdressKey}`,
                                  //       headers
                                  //    )
                                  //    .then((res) => {

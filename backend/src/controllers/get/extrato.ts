@@ -7,9 +7,20 @@ async function extrato(req: UserRequest, res: Response) {
    const SDK = new SDK_DubaiCash_B2B();
    const page = parseInt(req.params.page);
    const extrato = await SDK.Transactions.Extrato(page);
-   console.log(extrato);
+   const extratoFiltered = extrato.data.extract.filter((transaction: any) => {
+      if (!transaction.data.externalId) return;
+      return transaction.data.externalId.split("/")[0] == req.id_logins;
+   });
+   const extratoPages = extratoFiltered.length;
 
-   return res.status(extrato.status || 200).json(extrato.data);
+   return res.status(extratoFiltered.status || 200).json({
+      pagination: {
+         count: extratoPages,
+         page: page,
+         perPage: 50,
+      },
+      data: extratoFiltered,
+   });
 }
 
 export default extrato;

@@ -48,7 +48,6 @@ export default async function dashboardCliente(
    const SDK = new SDK_DubaiCash_B2B();
 
    const transactions = await SDK.Transactions.Extrato();
-   console.log(transactions.data.extract[1]);
    const transactionsFiltered = transactions.data.extract.filter(
       (transaction: any) => {
          if (!transaction.data.externalId) return;
@@ -111,9 +110,12 @@ export default async function dashboardCliente(
    // console.log(TPV);
 
    let cashout = 0;
+   let cashin = 0;
    for (let transaction of transactionsFiltered) {
       if (transaction.data.type === "DEBIT") {
          cashout = total.total.cashout += parseFloat(transaction.data.amount);
+      } else if (transaction.data.type === "CREDIT") {
+         cashin = total.total.cashin += parseFloat(transaction.data.amount);
       }
    }
 
@@ -158,6 +160,21 @@ export default async function dashboardCliente(
          return acc;
       }, {});
 
+   const cashinPorMes = transactionsFiltered
+      .filter((transaction: any) => transaction.data.type === "CREDIT")
+      .reduce((acc: any, transaction: any) => {
+         const month = new Date(transaction.data.createdAt).getMonth();
+         const year = new Date(transaction.data.createdAt).getFullYear();
+         const key = `${year}-${month + 1}`;
+         if (!acc[key]) {
+            acc[key] = { total: 0, count: 0 }; // Inicializa a chave caso ainda não exista
+         }
+
+         acc[key].total += parseFloat(transaction.data.amount);
+         acc[key].count += 1;
+         return acc;
+      }, {});
+
    const cashoutAtual = cashoutPorMes[`${currentYear}-${currentMonth}`] || {
       total: 0,
       count: 0,
@@ -167,21 +184,38 @@ export default async function dashboardCliente(
       count: 0,
    };
 
+   const cashinAtual = cashinPorMes[`${currentYear}-${currentMonth}`] || {
+      total: 0,
+      count: 0,
+   };
+   const cashinAnterior = cashinPorMes[`${lastMonthYear}-${lastMonth}`] || {
+      total: 0,
+      count: 0,
+   };
+
+   const mes_atual = cashoutAtual.count + cashinAtual.count;
+   const mes_anterior = cashoutAnterior.count + cashinAnterior.count;
+
    return res.status(200).json({
       ...total,
       total: {
-         cashin: 0,
+         cashin: cashin,
          cashout: cashout,
          taxas: 0,
       },
       quantidade_de_transacoes: {
-         mes_atual: cashoutAtual.count,
-         mes_anterior: cashoutAnterior.count,
+         mes_atual: mes_atual,
+         mes_anterior: mes_anterior,
          relatorio_ultimo_ano: [],
       },
       cashout: {
          mes_atual: cashoutAtual.total,
          mes_anterior: cashoutAnterior.total,
+         relatorio_ultimo_ano: [],
+      },
+      cashin: {
+         mes_atual: cashinAtual.total,
+         mes_anterior: cashinAnterior.total,
          relatorio_ultimo_ano: [],
       },
       tpv: {

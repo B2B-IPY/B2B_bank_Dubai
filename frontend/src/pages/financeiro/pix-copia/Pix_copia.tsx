@@ -146,7 +146,7 @@ const TransferirPixCopiaCola: React.FC = () => {
                               setIsLoading(true);
                               axios
                                  .post(
-                                    "https://api.binbank.com.br/pix/emv/transfer",
+                                    "http://localhost:2312/pix/emv/transfer",
                                     {
                                        emv: resp.key,
                                     },
@@ -218,7 +218,7 @@ const TransferirPixCopiaCola: React.FC = () => {
 
                                  axios
                                     .get(
-                                       `https://api.binbank.com.br/pix/consultar/${resp.key}`,
+                                       `http://localhost:2312/pix/consultar/${resp.key}`,
                                        headers
                                     )
                                     .then((res) => {

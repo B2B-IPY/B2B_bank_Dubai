@@ -81,7 +81,7 @@ function ListBoletos() {
 
       axios
          .get(
-            "https://api.binbank.com.br/billing/boleto",
+            "http://localhost:2312/billing/boleto",
 
             headers
          )

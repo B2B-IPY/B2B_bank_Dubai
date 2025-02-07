@@ -17,51 +17,7 @@ import { ComprovanteTransactions } from "../../createTransactionsPDF";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import { hiddenDados } from "../../../functions/toggleHidden";
 import { formatarNumeroParaBRL } from "../../../functions/moeda";
-
-export interface ResponseExtrato {
-   extract: Extrato[];
-   pagination: {
-      count: number;
-      page: number;
-      perPage: number;
-   };
-   statusCode: number;
-}
-export interface Extrato {
-   parentId: string;
-   transactionId: string;
-   data: ExtratoData;
-}
-export interface ExtratoData {
-   account: string;
-   amount: string;
-   bankName: string;
-   branch: string;
-   chargerBackId: string;
-   createdAt: string;
-   description: string;
-   documentNumber: string;
-   email: string;
-   endtoendId: string;
-   externalId: string;
-   invoiceId: string;
-   isbp: string;
-   key: string;
-   msgError: string;
-   name: string;
-   partnersId: number;
-   phone: string;
-   remittanceInformation: string;
-   status: string;
-   subType: string;
-   telegramNotification: boolean;
-   transactionId: string;
-   tryCount: number;
-   type: string;
-   typeKey: string;
-   uuid: string;
-   parentId: string;
-}
+import { Extrato } from "./extrato";
 
 function convertDate(isoDateString: string): string {
    const date = new Date(isoDateString);
@@ -81,6 +37,7 @@ function Transacoes() {
       $(".MONEY").mask("000.000.000,00", { reverse: true });
    });
    const [isLoading, setIsLoading] = useState<boolean>(false);
+   const [page, setPage] = useState<number>(1);
 
    const headers = {
       headers: {
@@ -88,23 +45,55 @@ function Transacoes() {
       },
    };
    const navigate = useNavigate();
-   const [data, setData] = useState<ResponseExtrato>({
-      extract: [],
+   const [data, setData] = useState<Extrato>({
       pagination: {
          count: 0,
          page: 0,
          perPage: 0,
       },
-      statusCode: 200,
+      data: [
+         {
+            transactionId: "",
+            parentId: null,
+            data: {
+               uuid: "",
+               invoiceId: 0,
+               partnersId: 0,
+               transactionId: "",
+               chargerBackId: "",
+               externalId: "",
+               name: "",
+               email: "",
+               documentNumber: "",
+               description: "",
+               phone: "",
+               amount: "",
+               isbp: "",
+               bankName: "",
+               branch: "",
+               account: "",
+               endtoendId: "",
+               typeKey: "",
+               key: "",
+               type: "",
+               subType: "",
+               remittanceInformation: "",
+               status: "",
+               msgError: "",
+               telegramNotification: false,
+               tryCount: 0,
+               createdAt: "",
+            },
+         },
+      ],
    });
    useEffect(() => {
       setIsLoading(true);
 
       axios
-         .get("https://api.binbank.com.br/extrato/1", headers)
+         .get(`http://localhost:2312/extrato/${page}`, headers)
          .then(({ data }) => {
             console.log(data);
-
             setData(data);
          })
          .catch((err) => {
@@ -178,7 +167,7 @@ function Transacoes() {
                {data ? (
                   <div className="flex flex-col gap-5">
                      <div className="flex flex-col gap-6">
-                        {data.extract
+                        {data.data
                            // .filter((val, i, arr) => {
                            //    const id = val.data.externalId;
                            //    console.log(id);
