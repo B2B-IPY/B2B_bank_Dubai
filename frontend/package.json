@@ -43,6 +43,7 @@
     "react-router-dom": "^6.22.0",
     "react-toastify": "^10.0.5",
     "recharts": "^2.12.7",
+    "socket.io-client": "^4.8.1",
     "styled-components": "^6.1.8",
     "websocket": "^1.0.35"
   },

@@ -1,9 +1,9 @@
 import express from "express";
 import router from "./router";
-import WebSocket from "ws";
 import dotenv from "dotenv";
 import cors from "cors";
-import http from "http";
+import http from "http"; // Importe o módulo http
+import { Server } from "socket.io"; // Importe o Socket.io
 
 const app = express();
 
@@ -13,29 +13,42 @@ app.use(cors());
 app.use(express.json());
 app.use(router);
 
-const server = http.createServer(app);
-
-// Configuração do WebSocket
-const wss = new WebSocket.Server({ server });
-
-wss.on("connection", (ws) => {
-   console.log("Cliente WebSocket conectado");
-
-   // Quando uma mensagem é recebida de um cliente
-   ws.on("message", (message) => {
-      console.log("Mensagem recebida:", message);
-   });
-
-   // Quando o cliente se desconectar
-   ws.on("close", () => {
-      console.log("Cliente WebSocket desconectado");
-   });
-});
-
 declare var process: { env: { PORT: number } };
 
 const port: number = process.env.PORT || 1381;
 
-server.listen(port, () => {
-   console.log(`Server rodando na porta ${port}`);
+// Crie um servidor HTTP usando o app do Express
+const server = http.createServer(app);
+
+// Configure o Socket.io
+const io = new Server(server, {
+  cors: {
+    origin: "*", // Permite todas as origens (ajuste para produção)
+    methods: ["GET", "POST"],
+  },
 });
+
+// Evento de conexão do Socket.io
+io.on("connection", (socket) => {
+  console.log("Cliente Socket.io conectado:", socket.id);
+
+  // Evento para receber mensagens do cliente
+  socket.on("message", (data) => {
+    console.log("Mensagem recebida:", data);
+
+    // Envie a mensagem de volta para todos os clientes
+    io.emit("message", data);
+  });
+
+  // Evento de desconexão
+  socket.on("disconnect", () => {
+    console.log("Cliente Socket.io desconectado:", socket.id);
+  });
+});
+
+// Inicie o servidor
+server.listen(port, () => {
+  console.log(`Server aberto em ${port}`);
+});
+
+export { io };

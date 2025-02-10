@@ -26,6 +26,7 @@
     "mysql2": "^3.9.1",
     "nodemailer": "^6.9.16",
     "qrcode": "^1.5.4",
+    "socket.io": "^4.8.1",
     "speakeasy": "^2.0.0",
     "ts-node": "^10.9.2",
     "websocket": "^1.0.35",
