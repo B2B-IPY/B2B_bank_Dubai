@@ -191,7 +191,7 @@ const TransferirPix: React.FC = () => {
                     setIsLoading(true);
                     axios
                       .post(
-                        "http://localhost:2312/pix/transfer",
+                        "https://api.binbank.com.br/pix/transfer",
                         {
                           key: data.key,
                           amount: data.amount,
@@ -212,7 +212,10 @@ const TransferirPix: React.FC = () => {
                         const datenow = new Date()
                           .toLocaleDateString("pt-BR")
                           .split("T")[0];
-                        const socket = io("http://localhost:2312");
+                        const socket = io("https://api.binbank.com.br", {
+                          path: "/socket.io/", // Certifique-se de que o caminho está correto
+                          transports: ["websocket"], // Força o uso de WebSockets
+                        });
 
                         socket.on("webhook-data", (data) => {
                           console.log("Dados recebidos do webhook:", data);
@@ -232,7 +235,7 @@ const TransferirPix: React.FC = () => {
                           setIframeUrl(blob);
                           toast.success("Transferência realizada com sucesso");
                         });
-                        
+
                         return () => {
                           socket.disconnect();
                         };
@@ -285,7 +288,7 @@ const TransferirPix: React.FC = () => {
                       setIsLoading(false);
                       // axios
                       //    .get(
-                      //       `http://localhost:2312/pix/consultar/${data.key}/${pixAdressKey}`,
+                      //       `https://api.binbank.com.br/pix/consultar/${data.key}/${pixAdressKey}`,
                       //       headers
                       //    )
                       //    .then((res) => {

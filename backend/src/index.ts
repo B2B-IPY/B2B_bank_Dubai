@@ -26,6 +26,7 @@ const io = new Server(server, {
     origin: "*", // Permite todas as origens (ajuste para produção)
     methods: ["GET", "POST"],
   },
+  transports: ["websocket", "polling"], // Prioriza WebSocket
 });
 
 // Evento de conexão do Socket.io
