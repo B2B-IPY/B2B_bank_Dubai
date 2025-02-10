@@ -213,7 +213,7 @@ const TransferirPix: React.FC = () => {
                           .toLocaleDateString("pt-BR")
                           .split("T")[0];
                         const socket = io("https://api.binbank.com.br", {
-                          path: "/socket.io/", // Certifique-se de que o caminho está correto
+                          path: "/socket.io; ", // Certifique-se de que o caminho está correto
                           transports: ["websocket"], // Força o uso de WebSockets
                         });
 

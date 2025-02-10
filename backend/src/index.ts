@@ -23,7 +23,7 @@ const server = http.createServer(app);
 // Configure o Socket.io
 const io = new Server(server, {
   cors: {
-    origin: "*", // Permite todas as origens (ajuste para produção)
+    origin: "https://api.binbank.com.br", // Permite todas as origens (ajuste para produção)
     methods: ["GET", "POST"],
   },
   transports: ["websocket", "polling"], // Prioriza WebSocket
