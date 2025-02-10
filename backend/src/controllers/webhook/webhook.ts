@@ -51,7 +51,7 @@ async function webhook(req: Request, res: Response) {
   const user_info = await SDK.sign.getLoginInfoByUserID(id, conn);
   conn.end();
 
-  if (object === "PIX_PAY_OUT" && webhook_respose.status === "COMPLETED") {
+  if (webhook_respose.status === "COMPLETED") {
     io.emit("webhook-data", webhook_respose);
   }
 

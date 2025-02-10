@@ -10,6 +10,7 @@ import { MdPix } from "react-icons/md";
 import { GrAdd, GrClose } from "react-icons/gr";
 import { BiCopy, BiTrash } from "react-icons/bi";
 import { CiTrash } from "react-icons/ci";
+import { io } from "socket.io-client";
 function BRLtoNumber(brl: string): number {
   return parseFloat(brl.replace(".", "").replace("R$", "").replace(",", "."));
 }
@@ -137,6 +138,20 @@ function CobrarViaQrCode() {
                         .then((res) => {
                           setQRcodeData(res.data.data.key);
                           setModalVisible(true);
+                          const socket = io("https://api.binbank.com.br", {
+                            path: "/socket.io; ", // Certifique-se de que o caminho está correto
+                            transports: ["websocket"], // Força o uso de WebSockets
+                          });
+
+                          socket.on("webhook-data", (data) => {
+                            console.log("Dados recebidos do webhook:", data);
+                            setModalVisible(false);
+                            toast.success("Saldo atualizado!");
+                          });
+
+                          return () => {
+                            socket.disconnect();
+                          };
                         })
                         .catch((err) => {
                           console.error(err);
