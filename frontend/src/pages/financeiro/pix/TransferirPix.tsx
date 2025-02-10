@@ -220,20 +220,22 @@ const TransferirPix: React.FC = () => {
                         socket.on("webhook-data", (data) => {
                           console.log("Dados recebidos do webhook:", data);
                           setWebhook_response(data);
-
-                          const blob = ComprovantePix(
-                            data.bankData.key,
-                            data.bankData.name,
-                            data.bankData.documentNumber,
-                            data.transaction.ispb,
-                            formatarNumeroParaBRL(data.transaction.amount),
-                            data.transaction.transactionId,
-                            datenow,
-                            currentTime
-                          );
-
-                          setIframeUrl(blob);
-                          toast.success("Transferência realizada com sucesso");
+                          if (data.event === "PIX_PAY_OUT") {
+                            const blob = ComprovantePix(
+                              data.bankData.key,
+                              data.bankData.name,
+                              data.bankData.documentNumber,
+                              data.transaction.ispb,
+                              formatarNumeroParaBRL(data.transaction.amount),
+                              data.transaction.transactionId,
+                              datenow,
+                              currentTime
+                            );
+                            setIframeUrl(blob);
+                            toast.success(
+                              "Transferência realizada com sucesso"
+                            );
+                          }
                         });
 
                         return () => {
