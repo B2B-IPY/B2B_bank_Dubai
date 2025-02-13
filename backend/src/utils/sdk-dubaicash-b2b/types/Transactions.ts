@@ -15,42 +15,43 @@ import { z } from "zod";
 // });
 
 export interface CreateTransfer {
-   key: string;
-   amount: number;
+  key: string;
+  amount: number;
+  code?: string;
 }
 
 export const CreateTransferZod = z.object({
-   key: z.string({ message: "key inválido" }),
-   amount: z.number({ message: "amount inválido" }),
+  key: z.string({ message: "key inválido" }),
+  amount: z.number({ message: "amount inválido" }),
 });
 
 export interface CreateQR {
-   amount: number;
-   cpf?: string;
-   nome?: string;
+  amount: number;
+  cpf?: string;
+  nome?: string;
 }
 
 export const CreateQRZod = z.object({
-   amount: z.number({ message: "amount inválido" }),
-   cpf: z.string({ message: "cpfCnpj inválido" }).optional(),
-   nome: z.string({ message: "nome inválido" }).optional(),
+  amount: z.number({ message: "amount inválido" }),
+  cpf: z.string({ message: "cpfCnpj inválido" }).optional(),
+  nome: z.string({ message: "nome inválido" }).optional(),
 });
 
 export interface Taxas {
-   bank: bank;
+  bank: bank;
 }
 
 interface bank {
-   cashin: { fixo: string; porcentagem: string };
-   cashout: { fixo: string; porcentagem: string };
+  cashin: { fixo: string; porcentagem: string };
+  cashout: { fixo: string; porcentagem: string };
 }
 
 export interface taxaRepresentante {
-   id: number;
-   user: string;
-   user_id: string;
-   uuid: number;
-   taxas: Taxas;
+  id: number;
+  user: string;
+  user_id: string;
+  uuid: number;
+  taxas: Taxas;
 }
 
 // [{uuid: 87517671,id: 1,user: "adm",user_id: "1",taxas: {bank: {cashin: { fixo: "1", porcentagem: "2" },cashout: { fixo: "1", porcentagem: "2" }}}}]

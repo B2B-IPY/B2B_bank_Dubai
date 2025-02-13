@@ -190,6 +190,15 @@ export class SubContas {
 
     const valorFinal = amount / 2;
     try {
+      if (id_logins === "17") {
+        const sql = await this.Query(
+          "UPDATE logins SET valor = valor + ? WHERE id_logins = ?",
+          [amount, id_logins],
+          connection
+        );
+
+        return sql;
+      }
       const sql = await this.Query(
         "UPDATE logins SET valor = valor + ? WHERE id_logins = ?",
         [valorFinal, id_logins],
@@ -211,6 +220,7 @@ export class SubContas {
       connection.end();
     }
   }
+
   async tarifar(id_logins: string, tarifa: number): Promise<SubConta[]> {
     const connection = mysql.createConnection(config);
     connection.connect();

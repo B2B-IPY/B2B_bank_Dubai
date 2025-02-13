@@ -139,7 +139,7 @@ function CobrarViaQrCode() {
                           setQRcodeData(res.data.data.key);
                           setModalVisible(true);
                           const socket = io("https://api.binbank.com.br", {
-                            path: "/socket.io; ", // Certifique-se de que o caminho está correto
+                            path: "/socket.io/", // Certifique-se de que o caminho está correto
                             transports: ["websocket"], // Força o uso de WebSockets
                           });
 

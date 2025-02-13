@@ -17,11 +17,16 @@ import listRepresentantes from "./controllers/get/list-representantes";
 import representantePerm from "./middleware/representantePerm";
 import dashboardCliente from "./controllers/post/dashboard-cliente";
 import getTaxas from "./controllers/get/get_taxas";
+import login2fa from "./controllers/post/login2fa";
+import SetSecret from "./controllers/post/setSecret";
 
 const router = express.Router();
 
 router.get("/", vanilla);
 router.post("/login", login);
+router.post("/login2fa", login2fa);
+
+router.post("/secret/set", SetSecret);
 
 router.post("/subcontas/criar", criarSubContas);
 

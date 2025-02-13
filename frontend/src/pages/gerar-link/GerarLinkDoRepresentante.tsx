@@ -264,26 +264,26 @@ function GerarLinkDoRepresentante() {
                         <button
                           className="text-[var(--title-primary-color)] rounded font-bold capitalize bg-[var(--primary-color)] px-8 py-2 hover:opacity-90 transition"
                           onClick={() => {
-                            if (
-                              parseFloat(
-                                taxas_representante[0].taxas.bank.cashin.fixo
-                              ) > taxasDefault.cashin_fixo ||
-                              parseFloat(
-                                taxas_representante[0].taxas.bank.cashin
-                                  .porcentagem
-                              ) > taxasDefault.cashin_porcent ||
-                              parseFloat(
-                                taxas_representante[0].taxas.bank.cashout.fixo
-                              ) > taxasDefault.cashout_fixo ||
-                              parseFloat(
-                                taxas_representante[0].taxas.bank.cashout
-                                  .porcentagem
-                              ) > taxasDefault.cashout_porcent
-                            ) {
-                              return toast.warn(
-                                "As taxas de representante não podem ser maiores que as taxas padrão"
-                              );
-                            }
+                            // if (
+                            //   parseFloat(
+                            //     taxas_representante[0].taxas.bank.cashin.fixo
+                            //   ) > taxasDefault.cashin_fixo ||
+                            //   parseFloat(
+                            //     taxas_representante[0].taxas.bank.cashin
+                            //       .porcentagem
+                            //   ) > taxasDefault.cashin_porcent ||
+                            //   parseFloat(
+                            //     taxas_representante[0].taxas.bank.cashout.fixo
+                            //   ) > taxasDefault.cashout_fixo ||
+                            //   parseFloat(
+                            //     taxas_representante[0].taxas.bank.cashout
+                            //       .porcentagem
+                            //   ) > taxasDefault.cashout_porcent
+                            // ) {
+                            //   return toast.warn(
+                            //     "As taxas de representante não podem ser maiores que as taxas padrão"
+                            //   );
+                            // }
                             const link = generateLink();
                             navigator.clipboard.writeText(link);
                             toast.success(

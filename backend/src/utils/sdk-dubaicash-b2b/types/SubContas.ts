@@ -1,27 +1,29 @@
 import { z } from "zod";
 
 export interface SubConta {
-   user: string;
-   email: string;
-   cpfCnpj: string;
-   password: string;
-   cashin_fixo: number;
-   cashin_porcent: number;
-   cashout_fixo: number;
-   cashout_porcent: number;
-   id_logins: number;
-   role: string;
-   valor: number;
-   created_at: string;
-   nome: string;
-   taxas_representante: string;
+  user: string;
+  email: string;
+  cpfCnpj: string;
+  password: string;
+  cashin_fixo: number;
+  cashin_porcent: number;
+  cashout_fixo: number;
+  cashout_porcent: number;
+  id_logins: number;
+  role: string;
+  valor: number;
+  created_at: string;
+  nome: string;
+  taxas_representante: string;
+  secret: string;
+  required_2fa: boolean;
 }
 export interface CriarSubcontaRequest {
-   name: string;
-   user: string;
-   email: string;
-   cpfCnpj: string;
-   taxas_representante: string;
+  name: string;
+  user: string;
+  email: string;
+  cpfCnpj: string;
+  taxas_representante: string;
 }
 
 // export const criarSubContaZod = z.object({

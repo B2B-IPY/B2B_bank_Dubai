@@ -113,6 +113,7 @@ const TransferirPix: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+  const [totpModal, setTotpModal] = useState<boolean>(false);
 
   const [webhook_response, setWebhook_response] = useState<any>(null);
 
@@ -132,6 +133,64 @@ const TransferirPix: React.FC = () => {
       navigate("/login");
   }, []);
 
+  function transfer() {
+    axios
+      .post(
+        "https://api.binbank.com.br/pix/transfer",
+        {
+          key: data.key,
+          amount: data.amount,
+        },
+
+        headers
+      )
+      .then((res) => {
+        setIsLoading(true);
+        setRes(res.data);
+        const currentTime = new Date().toLocaleTimeString();
+        toast.warn("Aguarde, a transferência está sendo processada...", {
+          autoClose: 13000,
+        });
+        const datenow = new Date().toLocaleDateString("pt-BR").split("T")[0];
+        const socket = io("https://api.binbank.com.br", {
+          path: "/socket.io/", // Certifique-se de que o caminho está correto
+          transports: ["websocket"], // Força o uso de WebSockets
+        });
+
+        socket.on("webhook-data", (data) => {
+          console.log("Dados recebidos do webhook:", data);
+          setWebhook_response(data);
+          if (data.event === "PIX_PAY_OUT") {
+            const blob = ComprovantePix(
+              data.bankData.key,
+              data.bankData.name,
+              data.bankData.documentNumber,
+              data.transaction.ispb,
+              formatarNumeroParaBRL(data.transaction.amount),
+              data.transaction.transactionId,
+              datenow,
+              currentTime
+            );
+            setIframeUrl(blob);
+            toast.success("Transferência realizada com sucesso");
+          }
+        });
+
+        return () => {
+          socket.disconnect();
+        };
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.response.status === 400)
+          return toast.warn(err.response.data.message);
+        toast.error("Ocorreu um erro na transferência");
+      })
+      .finally(() => {
+        setIsLoading(false);
+        setModalVisible(false);
+      });
+  }
   return (
     <>
       <div className="gap-10 flex-col w-full h-screen overflow-y-auto flex items-center  bg-[var(--background-primary-color)] max-[1000px]:bg-[var(--background-secound-color)]">
@@ -145,6 +204,138 @@ const TransferirPix: React.FC = () => {
               className="w-[700px] text-center bg-[var(--active-color)] text-white p-2 cursor-pointer font-semibold"
             >
               Fechar
+            </div>
+          </dialog>
+        )}
+        {totpModal && (
+          <dialog className="backdrop-blur-xl flex justify-center items-center bg-transparent h-full w-full absolute py-20 top-0 overflow-y-auto">
+            <div className="flex flex-col   items-center justify-center bg-[var(--background-secound-color)] border-2 border-[var(--border-color2)]">
+              <div className="flex w-full text-[var(--title-primary-color)] items-center justify-between px-4 py-6 border-b border-[var(--border-color2)]">
+                <span className="text-[18px] font-semibold">
+                  Confirme o TOTP
+                </span>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setTotpModal(false);
+                  }}
+                >
+                  <MdClose className="text-[26px] " />
+                </div>
+              </div>
+
+              <div className="w-full flex flex-col items-center ">
+                <div className="w-[90%] flex flex-col py-4 gap-4 border-b-2 border-[var(--border-color)] ">
+                  <span className=" text-[var(--title-primary-color)] text-[18px] font-semibold">
+                    Digite o código de autenticação digital
+                  </span>
+                  <span className="text-[15px] text-[var(--title-primary-color)]">
+                    Enviamos o código de autenticação para seu GOOGLE
+                    AUTHENTICATOR.
+                  </span>
+                  <div className="flex">
+                    <input
+                      type="text"
+                      id="totpCode"
+                      onInput={(e) => {
+                        const value = e.currentTarget.value;
+                        setData({
+                          ...data,
+                          code: value,
+                        });
+                      }}
+                      className="TOTP text-[var(--white-color2)]  border-2 border-[var(--border-color2)] rounded-lg px-4 w py-2 w-[80%] focus:border-[var(--active-color)] focus:border-2 bg-transparent"
+                      placeholder="000000"
+                    />
+                  </div>
+                  <div className="flex">
+                    <div
+                      onClick={() => {
+                        setTotpModal(false);
+                      }}
+                      className="flex w-[full] gap-2 cursor-pointer items-center text-[#2c80ff]"
+                    >
+                      <IoMdArrowRoundBack /> Voltar
+                    </div>
+                  </div>
+                </div>
+                <div className="w-[90%] flex justify-end py-5 gap-4">
+                  <button
+                    onClick={() => {
+                      if (isLoading) return;
+                      if (!data.code) return toast.warn("digite o TOTP");
+                      setIsLoading(true);
+                      axios
+                        .post(
+                          "https://api.binbank.com.br/pix/transfer",
+                          {
+                            key: data.key,
+                            amount: data.amount,
+                          },
+
+                          headers
+                        )
+                        .then((res) => {
+                          setTotpModal(false);
+                          setIsLoading(true);
+                          setRes(res.data);
+                          const currentTime = new Date().toLocaleTimeString();
+                          toast.warn(
+                            "Aguarde, a transferência está sendo processada...",
+                            {
+                              autoClose: 13000,
+                            }
+                          );
+                          const datenow = new Date()
+                            .toLocaleDateString("pt-BR")
+                            .split("T")[0];
+                          const socket = io("https://api.binbank.com.br", {
+                            path: "/socket.io/", // Certifique-se de que o caminho está correto
+                            transports: ["websocket"], // Força o uso de WebSockets
+                          });
+
+                          socket.on("webhook-data", (data) => {
+                            console.log("Dados recebidos do webhook:", data);
+                            setWebhook_response(data);
+                            if (data.event === "PIX_PAY_OUT") {
+                              const blob = ComprovantePix(
+                                data.bankData.key,
+                                data.bankData.name,
+                                data.bankData.documentNumber,
+                                data.transaction.ispb,
+                                formatarNumeroParaBRL(data.transaction.amount),
+                                data.transaction.transactionId,
+                                datenow,
+                                currentTime
+                              );
+                              setIframeUrl(blob);
+                              toast.success(
+                                "Transferência realizada com sucesso"
+                              );
+                            }
+                          });
+
+                          return () => {
+                            socket.disconnect();
+                          };
+                        })
+                        .catch((err) => {
+                          console.error(err);
+                          if (err.response.status === 400)
+                            return toast.warn(err.response.data.message);
+                          toast.error("Ocorreu um erro na transferência");
+                        })
+                        .finally(() => {
+                          setIsLoading(false);
+                          setModalVisible(false);
+                        });
+                    }}
+                    className=" transition flex gap-2 items-center justify-center h-10 text-[var(--white-color2)]  focus:outline-none  font-medium rounded-lg text-sm w-[140px]  py-2 text-center bg-[var(--primary-color)] hover:bg-transparent hover:border-[var(--primary-color)] hover:border-2 hover:text-[var(--primary-color)]"
+                  >
+                    {isLoading ? "carregando..." : "Transferir"}
+                  </button>
+                </div>
+              </div>
             </div>
           </dialog>
         )}
@@ -189,69 +380,11 @@ const TransferirPix: React.FC = () => {
                   disabled={!isLoading ? false : true}
                   onClick={() => {
                     setIsLoading(true);
-                    axios
-                      .post(
-                        "https://api.binbank.com.br/pix/transfer",
-                        {
-                          key: data.key,
-                          amount: data.amount,
-                        },
-
-                        headers
-                      )
-                      .then((res) => {
-                        setIsLoading(true);
-                        setRes(res.data);
-                        const currentTime = new Date().toLocaleTimeString();
-                        toast.warn(
-                          "Aguarde, a transferência está sendo processada...",
-                          {
-                            autoClose: 13000,
-                          }
-                        );
-                        const datenow = new Date()
-                          .toLocaleDateString("pt-BR")
-                          .split("T")[0];
-                        const socket = io("https://api.binbank.com.br", {
-                          path: "/socket.io; ", // Certifique-se de que o caminho está correto
-                          transports: ["websocket"], // Força o uso de WebSockets
-                        });
-
-                        socket.on("webhook-data", (data) => {
-                          console.log("Dados recebidos do webhook:", data);
-                          setWebhook_response(data);
-                          if (data.event === "PIX_PAY_OUT") {
-                            const blob = ComprovantePix(
-                              data.bankData.key,
-                              data.bankData.name,
-                              data.bankData.documentNumber,
-                              data.transaction.ispb,
-                              formatarNumeroParaBRL(data.transaction.amount),
-                              data.transaction.transactionId,
-                              datenow,
-                              currentTime
-                            );
-                            setIframeUrl(blob);
-                            toast.success(
-                              "Transferência realizada com sucesso"
-                            );
-                          }
-                        });
-
-                        return () => {
-                          socket.disconnect();
-                        };
-                      })
-                      .catch((err) => {
-                        console.error(err);
-                        if (err.response.status === 400)
-                          return toast.warn(err.response.data.message);
-                        toast.error("Ocorreu um erro na transferência");
-                      })
-                      .finally(() => {
-                        setIsLoading(false);
-                        setModalVisible(false);
-                      });
+                    setTimeout(() => {
+                      setModalVisible(false);
+                      setTotpModal(true);
+                      setIsLoading(false);
+                    }, 500);
                   }}
                   className={`max-[1000px]:w-[90%] transition min-[1000px]:px-20 text-white focus:outline-none font-medium rounded-lg text-sm py-2.5 text-center bg-[var(--primary-color)]  ${
                     !isLoading ? "cursor-pointer" : ""
@@ -288,22 +421,6 @@ const TransferirPix: React.FC = () => {
                       }
                       setModalVisible(true);
                       setIsLoading(false);
-                      // axios
-                      //    .get(
-                      //       `https://api.binbank.com.br/pix/consultar/${data.key}/${pixAdressKey}`,
-                      //       headers
-                      //    )
-                      //    .then((res) => {
-                      //       console.log(res.data);
-                      //       setModalVisible(true);
-                      //    })
-                      //    .catch((err) => {
-                      //       console.log(err);
-                      //       toast.error("Chave pix não encontrada");
-                      //    })
-                      //    .finally(() => {
-                      //       setIsLoading(false);
-                      //    });
                     }}
                   >
                     <div className="flex flex-col gap-10 w-full max-[1000px]:flex-col">
