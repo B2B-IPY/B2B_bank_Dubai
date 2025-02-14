@@ -247,4 +247,50 @@ export class SubContas {
       connection.end();
     }
   }
+  async ListContas(id_logins?: string): Promise<SubConta[]> {
+    const connection = mysql.createConnection(config);
+    connection.connect();
+
+    try {
+      if (id_logins) {
+        const sql = await this.Query(
+          "SELECT * FROM logins WHERE id_logins = ?",
+          [id_logins],
+          connection
+        );
+        return sql;
+      }
+      const sql = await this.Query("SELECT * FROM logins", [], connection);
+
+      return sql;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    } finally {
+      connection.end();
+    }
+  }
+  async ListContasRep(id_logins?: string): Promise<SubConta[]> {
+    const connection = mysql.createConnection(config);
+    connection.connect();
+
+    try {
+      if (id_logins) {
+        const sql = await this.Query(
+          `SELECT * FROM logins WHERE JSON_UNQUOTE(JSON_EXTRACT(taxas_representante, '$[0].user_id')) = ?`,
+          [id_logins],
+          connection
+        );
+        return sql;
+      }
+      const sql = await this.Query("SELECT * FROM logins", [], connection);
+
+      return sql;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    } finally {
+      connection.end();
+    }
+  }
 }

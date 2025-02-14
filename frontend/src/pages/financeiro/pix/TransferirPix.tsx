@@ -271,6 +271,7 @@ const TransferirPix: React.FC = () => {
                           {
                             key: data.key,
                             amount: data.amount,
+                            code: data.code,
                           },
 
                           headers

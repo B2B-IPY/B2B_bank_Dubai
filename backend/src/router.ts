@@ -19,6 +19,10 @@ import dashboardCliente from "./controllers/post/dashboard-cliente";
 import getTaxas from "./controllers/get/get_taxas";
 import login2fa from "./controllers/post/login2fa";
 import SetSecret from "./controllers/post/setSecret";
+import listContas from "./controllers/get/list-contas";
+import listContasByID from "./controllers/get/list-contasByID";
+import listContasRep from "./controllers/get/list-contasRepresentantes";
+import atualizarConta from "./controllers/put/atualizar-conta";
 
 const router = express.Router();
 
@@ -48,6 +52,16 @@ router.get("/getTaxas", JWTverify, getTaxas);
 
 router.get("/admin/balance", JWTverify, balanceAdmin);
 router.get("/balance", JWTverify, balance);
+router.get("/contas", JWTverify, representantePerm, listContas);
+router.get("/contas/:id", JWTverify, representantePerm, listContasByID);
+router.get(
+  "/listcontas/representante",
+  JWTverify,
+  representantePerm,
+  listContasRep
+);
+
+router.put("/contas/atualizar/:id", JWTverify, verifyPerm, atualizarConta);
 
 router.post("/tarifador", webhook);
 export default router;
