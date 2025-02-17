@@ -72,7 +72,7 @@ function ListContas() {
       navigate("/login");
     if (localStorage.getItem("role") === "representante") {
       axios
-        .get("http://localhost:2312/listcontas/representante", headers)
+        .get("https://api.binbank.com.br/listcontas/representante", headers)
         .then(({ data }) => {
           console.log(data);
 
@@ -91,7 +91,7 @@ function ListContas() {
     }
     axios
       .get(
-        "http://localhost:2312/contas",
+        "https://api.binbank.com.br/contas",
 
         headers
       )

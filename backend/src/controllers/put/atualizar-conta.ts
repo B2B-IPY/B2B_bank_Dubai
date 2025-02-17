@@ -47,7 +47,7 @@ async function atualizarConta(req: UserRequest, res: Response) {
 
   const conn = mysql.createConnection(config);
   conn.query(
-    "UPDATE users SET nome = ?, cpfCnpj = ?, role = ?, taxas_representante = ?, cashin_porcent = ?, cashin_fixo = ?, cashout_porcent = ?, cashout_fixo = ? WHERE id = ?",
+    "UPDATE logins SET nome = ?, cpfCnpj = ?, role = ?, taxas_representante = ?, cashin_porcent = ?, cashin_fixo = ?, cashout_porcent = ?, cashout_fixo = ? WHERE id_logins = ?",
     [
       body.nome,
       body.cpfCnpj,
@@ -67,6 +67,7 @@ async function atualizarConta(req: UserRequest, res: Response) {
       return res.status(200).json({ status: "Conta atualizada" });
     }
   );
+  conn.end();
 }
 
 export default atualizarConta;
